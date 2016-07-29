@@ -11,8 +11,6 @@
 #import "ZegoAnchorOptionViewController.h"
 #import <AVFoundation/AVAudioSession.h>
 
-//#define SUPPORT_SIX_STREAM 1
-
 #if SUPPORT_SIX_STREAM
 #define MAX_STREAM_COUNT    6
 #else

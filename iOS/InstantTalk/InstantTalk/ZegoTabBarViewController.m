@@ -29,7 +29,7 @@
     [self setViewControllersTapGesture];
     
     [[ZegoDataCenter sharedInstance] loginRoom];
-    [self setViewControllersTitle:@"ZEGO(登录中...)"];
+    [self setViewControllersTitle:NSLocalizedString(@"ZEGO(登录中...)", nil)];
     
     if ([[ZegoSettings sharedInstance] isDeviceiOS7])
         self.requestAlertContextDict = [NSMutableDictionary dictionary];
@@ -48,12 +48,12 @@
 
 - (void)onLoginResult:(NSNotification *)notification
 {
-    [self setViewControllersTitle:@"ZEGO"];
+    [self setViewControllersTitle:NSLocalizedString(@"ZEGO", nil)];
 }
 
 - (void)onDisconneted:(NSNotification *)notification
 {
-    [self setViewControllersTitle:@"ZEGO(离线)"];
+    [self setViewControllersTitle:NSLocalizedString(@"ZEGO(离线)", nil)];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -116,10 +116,10 @@
     if (self.presentedViewController)
         [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
     
-    NSString *message = [NSString stringWithFormat:@"%@ 请求与你视频聊天", requestInfo.fromUser.userName];
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ 请求与你视频聊天", nil), requestInfo.fromUser.userName];
     if ([[ZegoSettings sharedInstance] isDeviceiOS7])
     {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"允许", nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:NSLocalizedString(@"允许", nil), nil];
         self.requestAlertContextDict[requestInfo.magicNumber] = alertView;
         [alertView show];
     }
@@ -127,11 +127,11 @@
     {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
         
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             [[ZegoDataCenter sharedInstance] agreedVideoTalk:NO magicNumber:requestInfo.magicNumber];
             [self.requestAlertDict removeObjectForKey:requestInfo.magicNumber];
         }];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"允许" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"允许", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[ZegoDataCenter sharedInstance] agreedVideoTalk:YES magicNumber:requestInfo.magicNumber];
             [self.requestAlertDict removeObjectForKey:requestInfo.magicNumber];
         }];

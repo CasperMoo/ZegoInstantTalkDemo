@@ -11,6 +11,7 @@
 #import "ZegoBackground.h"
 #import "ZegoTabBarViewController.h"
 #import "ZegoSettings.h"
+#import "ZegoAVKitManager.h"
 
 #define kUserNotificationActionMessageCategory      @"messageaction"
 #define kUserNotificationActionMessage              @"openMessage"
@@ -31,6 +32,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    getZegoAV_ShareInstance();
+    
     [self registerNotificationAction:application];
     self.backgound = [[ZegoBackground alloc] init];
     
@@ -41,12 +44,16 @@
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    [self.backgound startPreventSleep];
+    if (!application.isIdleTimerDisabled)
+        [self.backgound startPreventSleep];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    if (application.isIdleTimerDisabled)
+        return;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceiveMessage:) name:kUserMessageReceiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRequestVideoTalk:) name:kUserRequestVideoTalkNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDisconnected:) name:kUserDisconnectNotification object:nil];
@@ -67,6 +74,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [application setApplicationIconBadgeNumber:0];
     
+    if (application.isIdleTimerDisabled)
+        return;
+    
     UIViewController *rootViewController = application.keyWindow.rootViewController;
     if ([rootViewController isKindOfClass:[ZegoTabBarViewController class]])
     {
@@ -81,6 +91,8 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if (application.isIdleTimerDisabled)
+        return;
     
     UIViewController *rootViewController = application.keyWindow.rootViewController;
     if ([rootViewController isKindOfClass:[ZegoTabBarViewController class]])
@@ -154,7 +166,7 @@
     {
         UIMutableUserNotificationAction *actionMessage = [[UIMutableUserNotificationAction alloc] init];
         actionMessage.activationMode = UIUserNotificationActivationModeForeground;
-        actionMessage.title = @"打开";
+        actionMessage.title = NSLocalizedString(@"打开", nil);
         actionMessage.identifier = kUserNotificationActionMessage;
         [actionMessage setDestructive:NO];
         [actionMessage setAuthenticationRequired:YES];
@@ -165,14 +177,14 @@
         
         UIMutableUserNotificationAction *agreeMessage = [[UIMutableUserNotificationAction alloc] init];
         agreeMessage.activationMode = UIUserNotificationActivationModeForeground;
-        agreeMessage.title = @"同意";
+        agreeMessage.title = NSLocalizedString(@"同意", nil);
         agreeMessage.identifier = kUserNotificationActionAgree;
         [agreeMessage setDestructive:NO];
         [agreeMessage setAuthenticationRequired:YES];
         
         UIMutableUserNotificationAction *disagreeMessage = [[UIMutableUserNotificationAction alloc] init];
         disagreeMessage.activationMode = UIUserNotificationActivationModeForeground;
-        disagreeMessage.title = @"拒绝";
+        disagreeMessage.title = NSLocalizedString(@"拒绝", nil);
         disagreeMessage.identifier = kUserNotificationActionDisagree;
         [disagreeMessage setDestructive:NO];
         [disagreeMessage setAuthenticationRequired:YES];
@@ -225,7 +237,7 @@
     //只保留最后一次视频请求信息
     self.requestInfo = requestInfo;
     
-    NSString *message = [NSString stringWithFormat:@"%@ 请求与你视频聊天", requestInfo.fromUser.userName];
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ 请求与你视频聊天", nil), requestInfo.fromUser.userName];
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
     localNotification.repeatInterval = 0;
     localNotification.timeZone = [NSTimeZone defaultTimeZone];

@@ -11,6 +11,9 @@
 /* Class = "UINavigationItem"; title = "ZEGO"; ObjectID = "4mu-4K-Gkl"; */
 "4mu-4K-Gkl.title" = "ZEGO";
 
+/* Class = "UILabel"; text = "多人视频"; ObjectID = "5cL-U6-1Ji"; */
+"5cL-U6-1Ji.text" = "多人视频";
+
 /* Class = "UILabel"; text = "Label1"; ObjectID = "5tV-UO-QwD"; */
 "5tV-UO-QwD.text" = "Label1";
 
@@ -113,11 +116,14 @@
 /* Class = "UIBarButtonItem"; title = "关于"; ObjectID = "bBQ-FT-RTp"; */
 "bBQ-FT-RTp.title" = "关于";
 
-/* Class = "UILabel"; text = "视频质量"; ObjectID = "c0V-2a-nk0"; */
-"c0V-2a-nk0.text" = "视频质量";
+/* Class = "UILabel"; text = "视频参数"; ObjectID = "c0V-2a-nk0"; */
+"c0V-2a-nk0.text" = "视频参数";
 
 /* Class = "UITextField"; placeholder = "User Name"; ObjectID = "fue-M6-J0i"; */
 "fue-M6-J0i.placeholder" = "User Name";
+
+/* Class = "UILabel"; text = "多人聊天"; ObjectID = "g2M-9O-eSE"; */
+"g2M-9O-eSE.text" = "多人聊天";
 
 /* Class = "UIButton"; normalTitle = "发送"; ObjectID = "h8Z-Tf-3Q2"; */
 "h8Z-Tf-3Q2.normalTitle" = "发送";

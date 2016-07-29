@@ -54,7 +54,7 @@
 		EF4184A61D41F13100B2A383 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF713A041D2DF1E800715B6B /* CoreTelephony.framework */; };
 		EF4184A71D41F13100B2A383 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = EF713A021D2DF1DE00715B6B /* libiconv.tbd */; };
 		EF4184AB1D41F13100B2A383 /* Avatar.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF713A2A1D2E008200715B6B /* Avatar.xcassets */; };
-		EF4184AE1D41F13100B2A383 /* localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EFFBF7721D3C74A1002FD7F2 /* localizable.strings */; };
+		EF4184AE1D41F13100B2A383 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EFFBF7721D3C74A1002FD7F2 /* Localizable.strings */; };
 		EF4184AF1D41F13100B2A383 /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EF4184771D3E095E00B2A383 /* silence.mp3 */; };
 		EF4184B01D41F13100B2A383 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF7139D61D2DEFD200715B6B /* LaunchScreen.storyboard */; };
 		EF4184B11D41F13100B2A383 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF7139D41D2DEFD200715B6B /* Assets.xcassets */; };
@@ -95,7 +95,7 @@
 		EF713A431D2F447000715B6B /* ZegoChatTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EF713A421D2F447000715B6B /* ZegoChatTableViewCell.m */; };
 		EF713A481D2F7F1B00715B6B /* ZegoMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = EF713A471D2F7F1B00715B6B /* ZegoMessage.m */; };
 		EFFBF7551D3887A8002FD7F2 /* ZegoLogTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFFBF7541D3887A8002FD7F2 /* ZegoLogTableViewController.m */; };
-		EFFBF7701D3C74A1002FD7F2 /* localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EFFBF7721D3C74A1002FD7F2 /* localizable.strings */; };
+		EFFBF7701D3C74A1002FD7F2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EFFBF7721D3C74A1002FD7F2 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -191,14 +191,14 @@
 		EF713A421D2F447000715B6B /* ZegoChatTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZegoChatTableViewCell.m; sourceTree = "<group>"; };
 		EF713A461D2F7F1B00715B6B /* ZegoMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZegoMessage.h; sourceTree = "<group>"; };
 		EF713A471D2F7F1B00715B6B /* ZegoMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZegoMessage.m; sourceTree = "<group>"; };
+		EFAC2FDD1D4AFA76000A7885 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		EFAC2FDE1D4AFA76000A7885 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		EFAC2FDF1D4AFA76000A7885 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		EFB92AC31D48C765009195CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		EFB92AC41D48C77E009195CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EFFBF7531D3887A8002FD7F2 /* ZegoLogTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZegoLogTableViewController.h; sourceTree = "<group>"; };
 		EFFBF7541D3887A8002FD7F2 /* ZegoLogTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZegoLogTableViewController.m; sourceTree = "<group>"; };
-		EFFBF7711D3C74A1002FD7F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/localizable.strings; sourceTree = "<group>"; };
-		EFFBF7731D3C74A3002FD7F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/localizable.strings; sourceTree = "<group>"; };
-		EFFBF7751D3C74B4002FD7F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
-		EFFBF7761D3C74E9002FD7F2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
-		EFFBF7771D3C74E9002FD7F2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		EFFBF7781D3C74E9002FD7F2 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/localizable.strings"; sourceTree = "<group>"; };
+		EFFBF7711D3C74A1002FD7F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,7 +309,7 @@
 				EF4184791D3E097700B2A383 /* ZegoBackground.h */,
 				EF41847A1D3E097700B2A383 /* ZegoBackground.m */,
 				EF7139D11D2DEFD200715B6B /* Main.storyboard */,
-				EFFBF7721D3C74A1002FD7F2 /* localizable.strings */,
+				EFFBF7721D3C74A1002FD7F2 /* Localizable.strings */,
 				EF7139D41D2DEFD200715B6B /* Assets.xcassets */,
 				EF713A2A1D2E008200715B6B /* Avatar.xcassets */,
 				EF4184771D3E095E00B2A383 /* silence.mp3 */,
@@ -551,7 +551,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF4184AB1D41F13100B2A383 /* Avatar.xcassets in Resources */,
-				EF4184AE1D41F13100B2A383 /* localizable.strings in Resources */,
+				EF4184AE1D41F13100B2A383 /* Localizable.strings in Resources */,
 				EF4184AF1D41F13100B2A383 /* silence.mp3 in Resources */,
 				EF4184B01D41F13100B2A383 /* LaunchScreen.storyboard in Resources */,
 				EF4184B11D41F13100B2A383 /* Assets.xcassets in Resources */,
@@ -566,7 +566,7 @@
 				EF713A2B1D2E008200715B6B /* Avatar.xcassets in Resources */,
 				EF713A0D1D2DF23100715B6B /* ZegoLiveRoom.framework in Resources */,
 				EF713A0C1D2DF22A00715B6B /* ZegoAVKit2.framework in Resources */,
-				EFFBF7701D3C74A1002FD7F2 /* localizable.strings in Resources */,
+				EFFBF7701D3C74A1002FD7F2 /* Localizable.strings in Resources */,
 				EF4184781D3E095E00B2A383 /* silence.mp3 in Resources */,
 				EF7139D81D2DEFD200715B6B /* LaunchScreen.storyboard in Resources */,
 				EF7139D51D2DEFD200715B6B /* Assets.xcassets in Resources */,
@@ -656,8 +656,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				EF7139D21D2DEFD200715B6B /* Base */,
-				EFFBF7751D3C74B4002FD7F2 /* en */,
-				EFFBF7761D3C74E9002FD7F2 /* zh-Hans */,
+				EFB92AC31D48C765009195CF /* en */,
+				EFAC2FDD1D4AFA76000A7885 /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -666,19 +666,19 @@
 			isa = PBXVariantGroup;
 			children = (
 				EF7139D71D2DEFD200715B6B /* Base */,
-				EFFBF7771D3C74E9002FD7F2 /* zh-Hans */,
+				EFAC2FDE1D4AFA76000A7885 /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		EFFBF7721D3C74A1002FD7F2 /* localizable.strings */ = {
+		EFFBF7721D3C74A1002FD7F2 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				EFFBF7711D3C74A1002FD7F2 /* Base */,
-				EFFBF7731D3C74A3002FD7F2 /* en */,
-				EFFBF7781D3C74E9002FD7F2 /* zh-Hans */,
+				EFB92AC41D48C77E009195CF /* en */,
+				EFAC2FDF1D4AFA76000A7885 /* zh-Hans */,
 			);
-			name = localizable.strings;
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

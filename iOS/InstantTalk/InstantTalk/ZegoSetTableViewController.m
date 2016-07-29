@@ -187,7 +187,7 @@
 
 - (void)showUploadAlertView
 {
-    NSString *message = [NSString stringWithFormat:@"日志上传成功"];
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"日志上传成功", nil)];
 //    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)
     {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];

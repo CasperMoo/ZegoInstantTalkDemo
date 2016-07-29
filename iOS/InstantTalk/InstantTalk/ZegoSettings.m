@@ -42,7 +42,13 @@ NSString *kZegoDemoPublishingLiveID     = @"liveID";        ///< 当前直播频
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _presetVideoQualityList = @[@"超低质量", @"低质量", @"标准质量", @"高质量", @"超高质量", @"自定义"];
+        _presetVideoQualityList = @[NSLocalizedString(@"超低质量", nil),
+                                    NSLocalizedString(@"低质量", nil),
+                                    NSLocalizedString(@"标准质量", nil),
+                                    NSLocalizedString(@"高质量", nil),
+                                    NSLocalizedString(@"超高质量", nil),
+                                    NSLocalizedString(@"自定义", nil)];
+        
         [self loadConfig];
     }
     

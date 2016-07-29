@@ -264,20 +264,20 @@
 
 - (void)alertNobodyOnline
 {
-    NSString *message = [NSString stringWithFormat:@"没有用户在线，可能无法进行视频聊天"];
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"没有用户在线，可能无法进行视频聊天", nil)];
     if ([[ZegoSettings sharedInstance] isDeviceiOS7])
     {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"继续", nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:NSLocalizedString(@"继续", nil), nil];
         [alertView show];
     }
     else
     {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
         
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             
         }];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"继续" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"继续", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self performSegueWithIdentifier:@"videoTalkSegue" sender:nil];
         }];
         

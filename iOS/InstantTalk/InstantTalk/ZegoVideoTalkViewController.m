@@ -38,6 +38,7 @@
 @property (nonatomic, assign) BOOL shouldInterrutped;
 
 @property (nonatomic, strong) NSMutableArray *retryStreamList;
+@property (nonatomic, strong) NSMutableArray *failedStreamList;
 
 @end
 
@@ -55,6 +56,7 @@
     _viewIndexDict = [[NSMutableDictionary alloc] initWithCapacity:MAX_STREAM_COUNT];
     _playStreamList = [[NSMutableArray alloc] init];
     _retryStreamList = [[NSMutableArray alloc] init];
+    _failedStreamList = [[NSMutableArray alloc] init];
     
     //先创建一个小view进行preview
     UIView *publishView = [self createPublishView];
@@ -70,13 +72,13 @@
     {
         //监听消息
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRespondVideoTalk:) name:kUserRespondVideoTalkNotification object:nil];
-        self.tipsLabel.text = @"等待对方同意...";
+        self.tipsLabel.text = NSLocalizedString(@"等待对方同意...", nil);
     }
     else
     {
         //退出大厅，进入私有房间
         [[ZegoDataCenter sharedInstance] leaveRoom];
-        self.tipsLabel.text = @"退出大厅...";
+        self.tipsLabel.text = NSLocalizedString(@"退出大厅...", nil);
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLeaveRoomFinished:) name:kUserLeaveRoomNotification object:nil];
@@ -140,9 +142,9 @@
     if (self.liveStreamID == nil || self.playStreamList.count == 0)
     {
         if (self.isPublishing)
-            self.tipsLabel.text = @"所有人都退出了聊天";
+            self.tipsLabel.text = NSLocalizedString(@"所有人都退出了聊天", nil);
         else
-            self.tipsLabel.text = @"对方可能无法响应";
+            self.tipsLabel.text = NSLocalizedString(@"对方可能无法响应", nil);
     }
 }
 
@@ -157,7 +159,7 @@
     ZegoUser *user = [[ZegoSettings sharedInstance] getZegoUser];
     [getBizRoomInstance() loginLiveRoom:user.userID userName:user.userName bizToken:0 bizID:self.privateRoomID];
     
-    [self addLogString:[NSString stringWithFormat:@"开始登录私有房间,房间ID: 0x%x", self.privateRoomID]];
+    [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"开始登录私有房间,房间ID: 0x%x", nil), self.privateRoomID]];
 }
 
 - (void)onRespondVideoTalk:(NSNotification *)notification
@@ -177,9 +179,9 @@
         {
             //所有用户都拒绝了
             if (self.userList.count == 2)
-                self.tipsLabel.text = @"对方拒绝了您的请求";
+                self.tipsLabel.text = NSLocalizedString(@"对方拒绝了您的请求", nil);
             else
-                self.tipsLabel.text = @"所有人都拒绝了您的请求";
+                self.tipsLabel.text = NSLocalizedString(@"所有人都拒绝了您的请求", nil);
         }
     }
 }
@@ -189,9 +191,9 @@
     //退出了大厅，进入私有房间
     [self setupLiveKit];
     [self loginPrivateRoom];
-    self.tipsLabel.text = @"开始登录私有房间...";
+    self.tipsLabel.text = NSLocalizedString(@"开始登录私有房间...", nil);
     
-    [self.logArray addObject:[NSString stringWithFormat:@"退出大厅,开始登录私有房间"]];
+    [self.logArray addObject:[NSString stringWithFormat:NSLocalizedString(@"退出大厅,开始登录私有房间", nil)]];
 }
 
 - (void)dismissViewController
@@ -229,7 +231,7 @@
 
 - (IBAction)closeView:(id)sender
 {
-    self.tipsLabel.text = @"退出视频聊天...";
+    self.tipsLabel.text = NSLocalizedString(@"退出视频聊天...", nil);
     
     [getZegoAV_ShareInstance() stopPreview];
     [getZegoAV_ShareInstance() setLocalView:nil];
@@ -321,7 +323,7 @@
     self.liveTitle = [NSString stringWithFormat:@"Hello-%@", [ZegoSettings sharedInstance].userName];
     [getBizRoomInstance() cteateStreamInRoom:self.liveTitle preferredStreamID:nil];
     
-    NSString *logString = [NSString stringWithFormat:@"创建流"];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"创建流", nil)];
     [self addLogString:logString];
 }
 
@@ -329,7 +331,7 @@
 {
     [getBizRoomInstance() getStreamList];
     
-    NSString *logString = [NSString stringWithFormat:@"开始获取直播流列表"];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"开始获取直播流列表", nil)];
     [self addLogString:logString];
 }
 
@@ -408,11 +410,11 @@
         [self.playStreamList addObject:streamInfo];
         [self createPlayStream:streamID];
         
-        NSString *logString = [NSString stringWithFormat:@"新增一条流, 流ID:%@", streamID];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"新增一条流, 流ID:%@", nil), streamID];
         [self addLogString:logString];
         
         if (self.isPublishing)
-            self.tipsLabel.text = @"视频聊天中...";
+            self.tipsLabel.text = NSLocalizedString(@"视频聊天中...", nil);
         
         if (self.viewContainersDict.count >= MAX_STREAM_COUNT)
             break;
@@ -430,13 +432,13 @@
         [self removeStreamViewContainer:streamID];
         [self removeStreamInfo:streamID];
         
-        NSString *logString = [NSString stringWithFormat:@"删除一条流, 流ID:%@", streamID];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"删除一条流, 流ID:%@", nil), streamID];
         [self addLogString:logString];
     }
     
     if (self.playStreamList.count == 0)
     {
-        self.tipsLabel.text = @"对方退出视频聊天";
+        self.tipsLabel.text = NSLocalizedString(@"对方退出视频聊天", nil);
         self.firstPlayStream = NO;
     }
 }
@@ -479,25 +481,25 @@
     {
         if (bizID != self.privateRoomID)
         {
-            NSString *logString = [NSString stringWithFormat:@"登录私有房间成功,room id不同. token 0x%x, id 0x%x", bizToken, bizID];
+            NSString *logString = [NSString stringWithFormat:@"%@ %@ token 0x%x, id 0x%x", NSLocalizedString(@"登录私有房间成功", nil), NSLocalizedString(@"ID不同", nil), bizToken, bizID];
             [self addLogString:logString];
             return;
         }
         
-        NSString *logString = [NSString stringWithFormat:@"登录私有房间成功. token 0x%x, id 0x%x", bizToken, bizID];
+        NSString *logString = [NSString stringWithFormat:@"%@ token 0x%x, id 0x%x", NSLocalizedString(@"登录私有房间成功", nil), bizToken, bizID];
         [self addLogString:logString];
         
         self.liveChannel = [[ZegoSettings sharedInstance] getChannelID:bizToken bizID:bizID];
         [self createStream];
         
         self.loginPrivateRoomSuccess = YES;
-        self.tipsLabel.text = @"与对方连接中...";
+        self.tipsLabel.text = NSLocalizedString(@"与对方连接中...", nil);
     }
     else
     {
-        NSString *logString = [NSString stringWithFormat:@"登录私有房间失败，token 0x%x, id 0x%x, privateID 0x%x. error: %d", bizToken, bizID, self.privateRoomID, err];
+        NSString *logString = [NSString stringWithFormat:@"%@ token 0x%x, id 0x%x, privateID 0x%x. error: %d", NSLocalizedString(@"登录私有房间失败", nil), bizToken, bizID, self.privateRoomID, err];
         [self addLogString:logString];
-        self.tipsLabel.text = @"登录私有房间失败";
+        self.tipsLabel.text = NSLocalizedString(@"登录私有房间失败", nil);
     }
 }
 
@@ -509,7 +511,7 @@
 - (void)onLeaveRoom:(int)err
 {
     NSLog(@"%s, error: %d", __func__, err);
-    NSString *logString = [NSString stringWithFormat:@"退出房间, error: %d", err];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"退出房间, error: %d", nil), err];
     [self addLogString:logString];
     
     [self dismissViewController];
@@ -519,7 +521,7 @@
 {
     if (streamID.length != 0)
     {
-        NSString *logString = [NSString stringWithFormat:@"创建流成功, streamID:%@", streamID];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"创建流成功, streamID:%@", nil), streamID];
         [self addLogString:logString];
         
         self.liveStreamID = streamID;
@@ -527,7 +529,7 @@
     }
     else
     {
-        NSString *logString = [NSString stringWithFormat:@"创建流失败"];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"创建流失败", nil)];
         [self addLogString:logString];
     }
 }
@@ -536,7 +538,7 @@
 {
     if (!self.loginChannelSuccess)
     {
-        NSString *logString = [NSString stringWithFormat:@"流列表有更新, 此时还未登录channel,先缓存"];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"流列表有更新,先缓存", nil)];
         [self addLogString:logString];
         
         if (flag == 1)
@@ -560,7 +562,7 @@
     
     if (streamList.count == 0)
     {
-        NSString *logString = [NSString stringWithFormat:@"流更新列表为空"];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"流更新列表为空", nil)];
         [self addLogString:logString];
         return;
     }
@@ -580,7 +582,7 @@
     
     NSLog(@"%s, ret: %d", __func__, ret);
     
-    NSString *logString = [NSString stringWithFormat:@"登录channel"];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"登录channel", nil)];
     [self addLogString:logString];
 }
 
@@ -603,12 +605,12 @@
     if (err != 0)
     {
         //TODO: error warning
-        NSString *logString = [NSString stringWithFormat:@"登录channel失败, error:%d", err];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"登录channel失败, error:%d", nil), err];
         [self addLogString:logString];
         return;
     }
     
-    NSString *logString = [NSString stringWithFormat:@"登录channel成功"];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"登录channel成功", nil)];
     [self addLogString:logString];
     
     if (self.publishView == nil)
@@ -628,7 +630,7 @@
     assert(b);
     NSLog(@"%s, ret: %d", __func__, b);
 
-    [self addLogString:[NSString stringWithFormat:@"开始直播，流ID:%@", self.liveStreamID]];
+    [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"开始直播，流ID:%@", nil), self.liveStreamID]];
     
     //同时开始拉流
     if (self.playStreamList.count == 0)
@@ -642,11 +644,11 @@
             
             [self createPlayStream:info.streamID];
             
-            NSString *logString = [NSString stringWithFormat:@"继续播放之前的流, 流ID:%@", info.streamID];
+            NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"继续播放之前的流, 流ID:%@", nil), info.streamID];
             [self addLogString:logString];
             
             if (self.isPublishing)
-                self.tipsLabel.text = @"视频聊天中...";
+                self.tipsLabel.text = NSLocalizedString(@"视频聊天中...", nil);
         }
     }
     
@@ -660,12 +662,12 @@
     [self reportStreamAction:YES streamID:self.liveStreamID];
     
     if (self.playStreamList.count != 0)
-        self.tipsLabel.text = @"视频聊天中...";
+        self.tipsLabel.text = NSLocalizedString(@"视频聊天中...", nil);
     
     self.isPublishing = YES;
     self.shouldInterrutped = YES;
     
-    NSString *logString = [NSString stringWithFormat:@"发布直播成功,流ID:%@", streamID];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"发布直播成功,流ID:%@", nil), streamID];
     [self addLogString:logString];
 }
 
@@ -676,12 +678,12 @@
     
     if (err == 1)
     {
-        NSString *logString = [NSString stringWithFormat:@"直播结束,流ID:%@", streamID];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"视频结束,流ID:%@", nil), streamID];
         [self addLogString:logString];
     }
     else
     {
-        NSString *logString = [NSString stringWithFormat:@"直播结束,流ID：%@, error:%d", streamID, err];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"视频结束,流ID：%@, error:%d", nil), streamID, err];
         [self addLogString:logString];
     }
     
@@ -689,14 +691,14 @@
     [self removeStreamViewContainer:self.liveStreamID];
     
     self.isPublishing = NO;
-    self.tipsLabel.text = @"与对方连接中断...";
+    self.tipsLabel.text = NSLocalizedString(@"与对方连接中断...", nil);
 }
 
 - (void)onPlaySucc:(NSString *)streamID channel:(NSString *)channel
 {
     NSLog(@"%s, streamID:%@", __func__, streamID);
     
-    NSString *logString = [NSString stringWithFormat:@"播放流成功, 流ID: %@", streamID];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"播放流成功, 流ID: %@", nil), streamID];
     [self addLogString:logString];
 }
 
@@ -705,10 +707,13 @@
     NSLog(@"%s, streamID:%@", __func__, streamID);
 //    assert(streamID.length != 0);
     
-    NSString *logString = [NSString stringWithFormat:@"播放流失败, 流ID:%@, error: %d", streamID, err];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"播放流失败, 流ID:%@, error: %d", nil), streamID, err];
     [self addLogString:logString];
     
-    if (err == 2 && streamID.length != 0)
+    if (streamID.length == 0)
+        return;
+    
+    if (err == 2)
     {
         if (![self isRetryStreamStop:streamID] && [self.viewIndexDict objectForKey:streamID] != nil)
         {
@@ -721,7 +726,19 @@
             RemoteViewIndex index = [self.viewIndexDict[streamID] unsignedIntValue];
             [getZegoAV_ShareInstance() startPlayStream:streamID viewIndex:index];
         }
+        else
+        {
+            [self.failedStreamList addObject:streamID];
+        }
     }
+    
+    if (err != 0)
+    {
+        [self.failedStreamList addObject:streamID];
+    }
+    
+    if (self.failedStreamList.count == self.playStreamList.count)
+        self.tipsLabel.text = NSLocalizedString(@"与对方连接中断...", nil);
 }
 
 - (BOOL)isRetryStreamStop:(NSString *)streamID

@@ -48,28 +48,28 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     _beautifyList = @[
-                      @"无美颜",
-                      @"磨皮",
-                      @"全屏美白",
-                      @"磨皮＋全屏美白",
-                      @"磨皮+皮肤美白"
+                      NSLocalizedString(@"无美颜", nil),
+                      NSLocalizedString(@"磨皮", nil),
+                      NSLocalizedString(@"全屏美白", nil),
+                      NSLocalizedString(@"磨皮＋全屏美白", nil),
+                      NSLocalizedString(@"磨皮+皮肤美白", nil)
                       ];
     
     _filterList = @[
-                    @"无滤镜",
-                    @"简洁",
-                    @"黑白",
-                    @"老化",
-                    @"哥特",
-                    @"锐色",
-                    @"淡雅",
-                    @"酒红",
-                    @"青柠",
-                    @"浪漫",
-                    @"光晕",
-                    @"蓝调",
-                    @"梦幻",
-                    @"夜色"
+                    NSLocalizedString(@"无滤镜", nil),
+                    NSLocalizedString(@"简洁", nil),
+                    NSLocalizedString(@"黑白", nil),
+                    NSLocalizedString(@"老化", nil),
+                    NSLocalizedString(@"哥特", nil),
+                    NSLocalizedString(@"锐色", nil),
+                    NSLocalizedString(@"淡雅", nil),
+                    NSLocalizedString(@"酒红", nil),
+                    NSLocalizedString(@"青柠", nil),
+                    NSLocalizedString(@"浪漫", nil),
+                    NSLocalizedString(@"光晕", nil),
+                    NSLocalizedString(@"蓝调", nil),
+                    NSLocalizedString(@"梦幻", nil),
+                    NSLocalizedString(@"夜色", nil)
                     ];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClose:)];
@@ -194,11 +194,11 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == 0)
-        return @"设置";
+        return NSLocalizedString(@"设置", nil);
     else if (section == 1)
-        return @"美颜";
+        return NSLocalizedString(@"美颜", nil);
     else if (section == 2)
-        return @"滤镜";
+        return NSLocalizedString(@"滤镜", nil);
     
     return nil;
 }
@@ -214,7 +214,7 @@
         ZegoAnchorOptionSwitchCell *cell = (ZegoAnchorOptionSwitchCell *)[tableView dequeueReusableCellWithIdentifier:@"OptionSwitchCell" forIndexPath:indexPath];
         if (indexPath.row == 1)
         {
-            cell.titleLabel.text = @"前置摄像头";
+            cell.titleLabel.text = NSLocalizedString(@"前置摄像头", nil);
             cell.switchButton.on = self.useFrontCamera;
             cell.switchButton.enabled = YES;
             if (self.enableCamera == NO)
@@ -225,7 +225,7 @@
         }
         else if (indexPath.row == 2)
         {
-            cell.titleLabel.text = @"麦克风";
+            cell.titleLabel.text = NSLocalizedString(@"麦克风", nil);
             cell.switchButton.on = self.enableMicrophone;
             cell.switchButton.enabled = YES;
             [cell.switchButton removeTarget:self action:NULL forControlEvents:UIControlEventValueChanged];
@@ -233,7 +233,7 @@
         }
         else if (indexPath.row == 3)
         {
-            cell.titleLabel.text = @"手电筒";
+            cell.titleLabel.text = NSLocalizedString(@"手电筒", nil);
             cell.switchButton.on = self.enableTorch;
             cell.switchButton.enabled = YES;
             if (self.enableCamera == NO)
@@ -246,7 +246,7 @@
         }
         else if (indexPath.row == 0)
         {
-            cell.titleLabel.text = @"启用摄像头";
+            cell.titleLabel.text = NSLocalizedString(@"启用摄像头", nil);
             cell.switchButton.on = self.enableCamera;
             cell.switchButton.enabled = YES;
             [cell.switchButton removeTarget:self action:NULL forControlEvents:UIControlEventValueChanged];

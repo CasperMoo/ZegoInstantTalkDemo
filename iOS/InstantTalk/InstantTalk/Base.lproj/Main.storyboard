@@ -150,15 +150,15 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UserName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FlD-XQ-4GR">
-                                            <rect key="frame" x="76" y="15" width="461" height="20"/>
+                                            <rect key="frame" x="76" y="15" width="451" height="20"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Djr-Xl-LKo">
-                                            <rect key="frame" x="552" y="10" width="30" height="30"/>
+                                            <rect key="frame" x="542" y="10" width="40" height="30"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="5tq-oj-TaH"/>
+                                                <constraint firstAttribute="width" constant="40" id="5tq-oj-TaH"/>
                                             </constraints>
                                             <state key="normal" title="视频"/>
                                             <connections>
@@ -420,7 +420,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="319.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="视频质量" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c0V-2a-nk0">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="视频参数" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c0V-2a-nk0">
                                                     <rect key="frame" x="8" y="40" width="68" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1343,8 +1343,8 @@
         <image name="btn_user_normal" width="27" height="27"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="gUn-aK-0L4"/>
         <segue reference="ZRp-iY-VOj"/>
-        <segue reference="Hhq-t2-T6p"/>
         <segue reference="s1i-Jg-SAf"/>
     </inferredMetricsTieBreakers>
 </document>

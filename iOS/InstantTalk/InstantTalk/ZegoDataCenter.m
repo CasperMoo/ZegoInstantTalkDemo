@@ -109,27 +109,27 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
 {
     if (self.isLogin)
     {
-        [self addLogString:@"当前已登录"];
+        [self addLogString:NSLocalizedString(@"当前已登录", nil)];
         return;
     }
     
     ZegoUser *user = [[ZegoSettings sharedInstance] getZegoUser];
     [getBizRoomInstance() loginLiveRoom:user.userID userName:user.userName bizToken:0 bizID:[ZegoSettings sharedInstance].bizID];
     
-    [self addLogString:[NSString stringWithFormat:@"开始登录房间"]];
+    [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"开始登录房间", nil)]];
 }
 
 - (void)leaveRoom
 {
     if (!self.isLogin)
     {
-        [self addLogString:@"当前未登录或进入了私聊房间"];
+        [self addLogString:NSLocalizedString(@"当前未登录或进入了私聊房间", nil)];
         return;
     }
     
     [getBizRoomInstance() leaveLiveRoom];
     
-    [self addLogString:[NSString stringWithFormat:@"离开房间"]];
+    [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"离开房间", nil)]];
 }
 
 #pragma mark BizStreamDelegate
@@ -139,14 +139,14 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     
     if (err == 0)
     {
-        NSString *logString = [NSString stringWithFormat:@"登录房间成功. token %d, id %d", bizToken, bizID];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"登录房间成功. token %d, id %d", nil), bizToken, bizID];
         [self addLogString:logString];
         
         _isLogin = YES;
     }
     else
     {
-        NSString *logString = [NSString stringWithFormat:@"登录房间失败. error: %d", err];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"登录房间失败. error: %d", nil), err];
         [self addLogString:logString];
         
     }
@@ -156,7 +156,7 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
 
 - (void)onLeaveRoom:(int)err
 {
-    [self addLogString:[NSString stringWithFormat:@"离开房间结果. error: %d", err]];
+    [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"离开房间结果. error: %d", nil), err]];
     _isLogin = NO;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kUserLeaveRoomNotification object:nil userInfo:nil];
@@ -167,12 +167,12 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     NSLog(@"%s, error: %d", __func__, err);
     if (err == 0)
     {
-        NSString *logString = [NSString stringWithFormat:@"断开房间. token %d, id %d", bizToken, bizID];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"断开房间. token %d, id %d", nil), bizToken, bizID];
         [self addLogString:logString];
     }
     else
     {
-        NSString *logString = [NSString stringWithFormat:@"断开房间. error: %d", err];
+        NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"断开房间. error: %d", nil), err];
         [self addLogString:logString];
     }
     
