@@ -104,3 +104,9 @@
 "超高质量" = "Highest";
 "自定义" = "Customize";
 
+"Zego Only" = "Zego Only, Others Cannot Use this framework";
+"需要访问相机" = "Camera Authorization";
+"需要访问麦克风" = "Microphone Authorization";
+"直播视频,访问相机" = "To broadcast, LiveDemo needs permission to access camera. Click the Settings Button,then toggle on the permissions swith for camera";
+"直播视频,访问麦克风" = "To broadcast, LiveDemo needs permission to access microphone. Click the settings Button, the toggle on the permissions swith for microphone";
+"设置权限" = "Setting";

@@ -108,11 +108,11 @@
     
     // Configure the cell...
     if (indexPath.row >= [ZegoDataCenter sharedInstance].sessionList.count)
-        return nil;
+        return cell;
     
     ZegoMessage *message = [ZegoDataCenter sharedInstance].sessionList[indexPath.row];
     if (message == nil)
-        return nil;
+        return cell;
     
     if (message.memberList.count == 2)
     {

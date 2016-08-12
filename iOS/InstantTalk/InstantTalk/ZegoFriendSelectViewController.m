@@ -101,7 +101,7 @@
     
     // Configure the cell...
     if (indexPath.row >= self.userList.count)
-        return nil;
+        return cell;
     
     ZegoUserInfo *userInfo = [self.userList objectAtIndex:indexPath.row];
     ZegoUser *user = userInfo.user;

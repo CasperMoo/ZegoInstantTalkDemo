@@ -108,7 +108,7 @@
     
     // Configure the cell...
     if (indexPath.row >= [ZegoDataCenter sharedInstance].userList.count)
-        return nil;
+        return cell;
     
     ZegoUserInfo *userInfo = [[ZegoDataCenter sharedInstance].userList objectAtIndex:indexPath.row];
     ZegoUser *user = userInfo.user;

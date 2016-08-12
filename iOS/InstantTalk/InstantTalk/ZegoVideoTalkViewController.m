@@ -11,8 +11,9 @@
 #import "ZegoDataCenter.h"
 #import "ZegoStreamInfo.h"
 #import "ZegoLogTableViewController.h"
+#import <AVFoundation/AVFoundation.h>
 
-@interface ZegoVideoTalkViewController () <ZegoLiveApiDelegate, BizRoomStreamDelegate>
+@interface ZegoVideoTalkViewController () <ZegoLiveApiDelegate, BizRoomStreamDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *playContainerView;
 @property (nonatomic, weak) IBOutlet UILabel *tipsLabel;
@@ -58,6 +59,21 @@
     _retryStreamList = [[NSMutableArray alloc] init];
     _failedStreamList = [[NSMutableArray alloc] init];
     
+    BOOL videoAuthorization = [self checkVideoAuthorization];
+    BOOL audioAuthorization = [self checkAudioAuthorization];
+    
+    if (videoAuthorization == YES)
+    {
+        if (audioAuthorization == NO)
+        {
+            [self showAuthorizationAlert:NSLocalizedString(@"直播视频,访问麦克风", nil) title:NSLocalizedString(@"需要访问麦克风", nil)];
+        }
+    }
+    else
+    {
+        [self showAuthorizationAlert:NSLocalizedString(@"直播视频,访问相机", nil) title:NSLocalizedString(@"需要访问相机", nil)];
+    }
+    
     //先创建一个小view进行preview
     UIView *publishView = [self createPublishView];
     if (publishView)
@@ -67,7 +83,6 @@
         self.publishView = publishView;
     }
 
-    
     if (self.isRequester)
     {
         //监听消息
@@ -85,6 +100,46 @@
     self.checkTimer = [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(onCheckUser) userInfo:nil repeats:NO];
 }
 
+- (void)openSetting
+{
+    NSURL *settingURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+    if ([[UIApplication sharedApplication] canOpenURL:settingURL])
+        [[UIApplication sharedApplication] openURL:settingURL];
+}
+
+- (void)showAuthorizationAlert:(NSString *)message title:(NSString *)title
+{
+    if ([self isDeviceiOS7])
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:NSLocalizedString(@"设置权限", nil), nil];
+        [alertView show];
+    }
+    else
+    {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        UIAlertAction *settingAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"设置权限", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self openSetting];
+        }];
+        
+        [alertController addAction:settingAction];
+        [alertController addAction:cancelAction];
+        
+        alertController.preferredAction = settingAction;
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
+#pragma mark alert view delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+        [self openSetting];
+}
+
+#pragma mark audiosessionInterrupted notification
 - (void)audioSessionWasInterrupted:(NSNotification *)notification
 {
     if (AVAudioSessionInterruptionTypeBegan == [notification.userInfo[AVAudioSessionInterruptionTypeKey] intValue])
@@ -129,6 +184,34 @@
         [self.checkTimer invalidate];
         self.checkTimer = nil;
     }
+}
+
+//检查相机权限
+- (BOOL)checkVideoAuthorization
+{
+    AVAuthorizationStatus videoAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (videoAuthStatus == AVAuthorizationStatusDenied || videoAuthStatus == AVAuthorizationStatusRestricted)
+        return NO;
+    if (videoAuthStatus == AVAuthorizationStatusNotDetermined)
+    {
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+        }];
+    }
+    return YES;
+}
+
+- (BOOL)checkAudioAuthorization
+{
+    AVAuthorizationStatus audioAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+    if (audioAuthStatus == AVAuthorizationStatusDenied || audioAuthStatus == AVAuthorizationStatusRestricted)
+        return NO;
+    if (audioAuthStatus == AVAuthorizationStatusNotDetermined)
+    {
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL granted) {
+        }];
+    }
+    
+    return YES;
 }
 
 - (void)setupLiveKit
@@ -429,6 +512,7 @@
         if (![self isStreamIDExist:streamID])
             continue;
         
+        [getZegoAV_ShareInstance() stopPlayStream:streamID];
         [self removeStreamViewContainer:streamID];
         [self removeStreamInfo:streamID];
         
@@ -610,7 +694,7 @@
         return;
     }
     
-    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"登录channel成功", nil)];
+    NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"登录channel成功, streamID: %s", nil), channel];
     [self addLogString:logString];
     
     if (self.publishView == nil)
