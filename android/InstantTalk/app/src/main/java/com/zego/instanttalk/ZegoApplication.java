@@ -3,6 +3,8 @@ package com.zego.instanttalk;
 import android.app.Application;
 import android.content.Context;
 
+import com.zego.instanttalk.presenters.BizLivePresenter;
+
 
 /**
  * des: 自定义Application.
@@ -18,7 +20,7 @@ public class ZegoApplication extends Application{
 
         sApplicationContext = this;
 
-        BizApiManager.getInstance().init(this);
+        BizLivePresenter.getInstance();
         ZegoApiManager.getInstance().initSDK(this);
     }
 

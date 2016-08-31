@@ -56,6 +56,11 @@
     [super viewWillDisappear:animated];
 }
 
+- (IBAction)onContactUs:(id)sender
+{
+    [[ZegoDataCenter sharedInstance] contactUs];
+}
+
 #pragma mark -- UIPickerViewDelegate, UIPickerViewDataSource
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
     return 1;
@@ -193,19 +198,6 @@
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alertView show];
     }
-    
-    //ios9 bug， 下面这段代码会crash
-//    else
-//    {
-//        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
-//        
-//        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//        }];
-//        
-//        [alertController addAction:cancelAction];
-//        
-//        [self presentViewController:alertController animated:YES completion:nil];
-//    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {

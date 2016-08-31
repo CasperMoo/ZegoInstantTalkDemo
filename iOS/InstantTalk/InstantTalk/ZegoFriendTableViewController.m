@@ -76,6 +76,11 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
 }
 
+- (IBAction)onContactUs:(id)sender
+{
+    [[ZegoDataCenter sharedInstance] contactUs];
+}
+
 - (void)onUserUpdated:(NSNotification *)notification
 {
     [self setRightButton];

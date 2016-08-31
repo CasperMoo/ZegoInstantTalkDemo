@@ -16,6 +16,7 @@
     <string name="modify_appid_and_appsign">修改</string>
     <string name="quality_options">直播品质:</string>
     <string name="upload_log">上传日志</string>
+    <string name="contact_us">联系我们</string>
     <string name="about">关于</string>
     <string name="upload_log_successfully">日志上传成功</string>
     <string name="modify_video_configs_successfully">修改直播配置成功</string>

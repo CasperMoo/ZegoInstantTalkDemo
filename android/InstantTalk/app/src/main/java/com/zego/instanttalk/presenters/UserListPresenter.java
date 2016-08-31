@@ -117,4 +117,8 @@ public class UserListPresenter {
     public List<BizUser> getUserList(){
         return mListUser;
     }
+
+    public void clearUserList(){
+        mListUser.clear();
+    }
 }

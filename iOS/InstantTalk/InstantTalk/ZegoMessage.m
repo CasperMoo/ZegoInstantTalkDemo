@@ -115,7 +115,7 @@ NSString *const kUserUnreadCountUpdateNotification = @"unreadCountUpdate";
     
     NSArray *notSelfMemberArray = [self.memberList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"userID != %@", [ZegoSettings sharedInstance].userID]];
     NSString *sendContent = [self formatMessage:messageContent toUserList:notSelfMemberArray];
-    [getBizRoomInstance() sendBroadcastTextMsgInChatRoom:sendContent];
+    [getBizRoomInstance() sendBroadcastTextMsgInChatRoom:sendContent isPublicRoom:YES];
     
     //增加一条messageHistory
     if (self.messageHistory == nil)

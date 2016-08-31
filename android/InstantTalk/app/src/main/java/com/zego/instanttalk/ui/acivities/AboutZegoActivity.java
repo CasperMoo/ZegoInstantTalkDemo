@@ -9,7 +9,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.zego.instanttalk.R;
-import com.zego.instanttalk.base.AbsBaseActivity;
+import com.zego.instanttalk.ui.base.AbsBaseActivity;
 
 import butterknife.Bind;
 import butterknife.OnClick;

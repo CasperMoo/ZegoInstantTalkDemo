@@ -18,11 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.zego.instanttalk.BizApiManager;
 import com.zego.instanttalk.R;
 import com.zego.instanttalk.ZegoApiManager;
 import com.zego.instanttalk.ZegoApplication;
-import com.zego.instanttalk.base.AbsBaseFragment;
+import com.zego.instanttalk.presenters.UserListPresenter;
+import com.zego.instanttalk.ui.base.AbsBaseFragment;
 import com.zego.instanttalk.presenters.BizLivePresenter;
 import com.zego.instanttalk.ui.acivities.AboutZegoActivity;
 import com.zego.instanttalk.utils.BizLiveUitl;
@@ -148,7 +148,7 @@ public class SettingFragment extends AbsBaseFragment {
                         }
 
                         // 退出大厅, 重新登陆
-                        BizLivePresenter.getInstance().leaveRoom();
+                        BizLivePresenter.getInstance().leavePublicRoom();
                     }
 
                     return true;
@@ -276,7 +276,7 @@ public class SettingFragment extends AbsBaseFragment {
         ivAvatar.setImageBitmap(BizLiveUitl.getAvatarByUserID(userID));
 
         // 退出大厅, 重新登陆
-        BizLivePresenter.getInstance().leaveRoom();
+        BizLivePresenter.getInstance().leavePublicRoom();
     }
 
     @OnClick(R.id.rlyt_advanced)
@@ -385,15 +385,18 @@ public class SettingFragment extends AbsBaseFragment {
                     };
                     long appIDBiz = 308895348;
 
-                    BizApiManager.getInstance().getBizLiveRoom().unInitSdk();
-                    BizApiManager.getInstance().getBizLiveRoom().initSdk(appIDBiz, signKeyBiz, signKeyBiz.length, ZegoApplication.sApplicationContext);
+                    BizLivePresenter.getInstance().uninit();
+                    BizLivePresenter.getInstance().init(appIDBiz, signKeyBiz, signKeyBiz.length, ZegoApplication.sApplicationContext);
 
-                    mHandler.post(new Runnable() {
+                    mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             Toast.makeText(mParentActivity, getString(R.string.modify_appid_and_appsign_successfully), Toast.LENGTH_SHORT).show();
+                            // 退出大厅, 重新登陆
+                            UserListPresenter.getInstance().clearUserList();
+                            BizLivePresenter.getInstance().leavePublicRoom();
                         }
-                    });
+                    }, 1000);
                 }
             }
         }).start();

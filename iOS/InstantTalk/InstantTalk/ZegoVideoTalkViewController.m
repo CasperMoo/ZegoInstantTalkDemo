@@ -32,7 +32,7 @@
 @property (nonatomic, assign) BOOL loginChannelSuccess;
 @property (nonatomic, assign) BOOL loginPrivateRoomSuccess;
 
-@property (nonatomic, strong) NSTimer *checkTimer;
+//@property (nonatomic, strong) NSTimer *checkTimer;
 @property (nonatomic, assign) NSUInteger refuseUserNumber;
 
 @property (nonatomic, assign) BOOL isPublishing;
@@ -40,6 +40,9 @@
 
 @property (nonatomic, strong) NSMutableArray *retryStreamList;
 @property (nonatomic, strong) NSMutableArray *failedStreamList;
+
+@property (nonatomic, strong) NSMutableDictionary *requestAlertDict;
+@property (nonatomic, strong) NSMutableDictionary *requestAlertContextDict;
 
 @end
 
@@ -59,6 +62,11 @@
     _retryStreamList = [[NSMutableArray alloc] init];
     _failedStreamList = [[NSMutableArray alloc] init];
     
+    if ([[ZegoSettings sharedInstance] isDeviceiOS7])
+        self.requestAlertContextDict = [NSMutableDictionary dictionary];
+    else
+        self.requestAlertDict = [NSMutableDictionary dictionary];
+    
     BOOL videoAuthorization = [self checkVideoAuthorization];
     BOOL audioAuthorization = [self checkAudioAuthorization];
     
@@ -73,6 +81,8 @@
     {
         [self showAuthorizationAlert:NSLocalizedString(@"直播视频,访问相机", nil) title:NSLocalizedString(@"需要访问相机", nil)];
     }
+    
+    [self setupLiveKit];
     
     //先创建一个小view进行preview
     UIView *publishView = [self createPublishView];
@@ -92,12 +102,13 @@
     else
     {
         //退出大厅，进入私有房间
-        [[ZegoDataCenter sharedInstance] leaveRoom];
-        self.tipsLabel.text = NSLocalizedString(@"退出大厅...", nil);
+        [self loginPrivateRoom];
+        self.tipsLabel.text = NSLocalizedString(@"开始登录私有房间...", nil);
+        
+        [self.logArray addObject:[NSString stringWithFormat:NSLocalizedString(@"退出大厅,开始登录私有房间", nil)]];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLeaveRoomFinished:) name:kUserLeaveRoomNotification object:nil];
-    self.checkTimer = [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(onCheckUser) userInfo:nil repeats:NO];
+
+//    self.checkTimer = [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(onCheckUser) userInfo:nil repeats:NO];
 }
 
 - (void)openSetting
@@ -135,8 +146,33 @@
 #pragma mark alert view delegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 1)
+    UIAlertView *view = nil;
+    NSString *magicNumber = nil;
+    for (NSString *key in self.requestAlertContextDict.allKeys)
+    {
+        if (self.requestAlertContextDict[key] == alertView)
+        {
+            view = alertView;
+            magicNumber = key;
+            break;
+        }
+    }
+    
+    if (buttonIndex == 1 && view == nil)
+    {
         [self openSetting];
+        return;
+    }
+    
+    if (buttonIndex == 0)
+        [[ZegoDataCenter sharedInstance] agreedVideoTalk:NO magicNumber:magicNumber];
+    else if (buttonIndex == 1)
+    {
+        [[ZegoDataCenter sharedInstance] agreedVideoTalk:YES magicNumber:magicNumber];
+        [self closeView:nil];
+    }
+    
+    [self.requestAlertContextDict removeObjectForKey:magicNumber];
 }
 
 #pragma mark audiosessionInterrupted notification
@@ -163,11 +199,16 @@
         if (!self.shouldInterrutped)
             return;
         
-        [getBizRoomInstance() cteateStreamInRoom:self.liveTitle preferredStreamID:self.liveStreamID];
+        [getBizRoomInstance() cteateStreamInRoom:self.liveTitle preferredStreamID:self.liveStreamID isPublicRoom:NO];
         
         NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"创建断开之前相同的流", nil)];
         [self addLogString:logString];
     }
+}
+
+- (void)onRequestVideoTalk:(NSNotification *)notification
+{
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -179,11 +220,11 @@
 {
     [super viewWillDisappear:animated];
     
-    if (self.isMovingFromParentViewController)
-    {
-        [self.checkTimer invalidate];
-        self.checkTimer = nil;
-    }
+//    if (self.isMovingFromParentViewController)
+//    {
+//        [self.checkTimer invalidate];
+//        self.checkTimer = nil;
+//    }
 }
 
 //检查相机权限
@@ -217,19 +258,20 @@
 - (void)setupLiveKit
 {
     getZegoAV_ShareInstance().delegate = self;
-    getBizRoomInstance().streamDelegate = self;
+    
+    [[ZegoDataCenter sharedInstance] registerPrivateRoomDelegate:self];
 }
 
-- (void)onCheckUser
-{
-    if (self.liveStreamID == nil || self.playStreamList.count == 0)
-    {
-        if (self.isPublishing)
-            self.tipsLabel.text = NSLocalizedString(@"所有人都退出了聊天", nil);
-        else
-            self.tipsLabel.text = NSLocalizedString(@"对方可能无法响应", nil);
-    }
-}
+//- (void)onCheckUser
+//{
+//    if (self.liveStreamID == nil || self.playStreamList.count == 0)
+//    {
+//        if (self.isPublishing)
+//            self.tipsLabel.text = NSLocalizedString(@"所有人都退出了聊天", nil);
+//        else
+//            self.tipsLabel.text = NSLocalizedString(@"对方可能无法响应", nil);
+//    }
+//}
 
 - (void)loginPrivateRoom
 {
@@ -240,7 +282,7 @@
     }
     
     ZegoUser *user = [[ZegoSettings sharedInstance] getZegoUser];
-    [getBizRoomInstance() loginLiveRoom:user.userID userName:user.userName bizToken:0 bizID:self.privateRoomID];
+    [getBizRoomInstance() loginLiveRoom:user.userID userName:user.userName bizToken:0 bizID:self.privateRoomID isPublicRoom:NO];
     
     [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"开始登录私有房间,房间ID: 0x%x", nil), self.privateRoomID]];
 }
@@ -251,8 +293,8 @@
     if (agreed)
     {
         //退出大厅，进入私有房间
-        [[ZegoDataCenter sharedInstance] leaveRoom];
         self.privateRoomID = [notification.userInfo[@"roomID"] unsignedIntValue];
+        [self loginPrivateRoom];
     }
     else
     {
@@ -269,23 +311,11 @@
     }
 }
 
-- (void)onLeaveRoomFinished:(NSNotification *)notification
-{
-    //退出了大厅，进入私有房间
-    [self setupLiveKit];
-    [self loginPrivateRoom];
-    self.tipsLabel.text = NSLocalizedString(@"开始登录私有房间...", nil);
-    
-    [self.logArray addObject:[NSString stringWithFormat:NSLocalizedString(@"退出大厅,开始登录私有房间", nil)]];
-}
-
 - (void)dismissViewController
 {
     self.loginPrivateRoomSuccess = NO;
     
     //发广播,让dataCenter开始重新登录公共房间
-    [[NSNotificationCenter defaultCenter] postNotificationName:kUserLeavePrivateRoomNotification object:nil userInfo:nil];
-    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -328,7 +358,7 @@
     
     if (self.loginPrivateRoomSuccess)
     {
-        [getBizRoomInstance() leaveLiveRoom];
+        [getBizRoomInstance() leaveLiveRoom:NO];
         self.loginPrivateRoomSuccess = NO;
     }
     else
@@ -339,9 +369,12 @@
             //请求方在还没有应答时就退出了页面
             [[ZegoDataCenter sharedInstance] cancelVideoTalk:self.userList];
         }
+        
+        [[ZegoDataCenter sharedInstance] registerPrivateRoomDelegate:nil];
     }
     
     [[ZegoDataCenter sharedInstance] stopVideoTalk];
+    
 }
 
 - (IBAction)onShowPublishOption:(id)sender
@@ -404,7 +437,7 @@
 - (void)createStream
 {
     self.liveTitle = [NSString stringWithFormat:@"Hello-%@", [ZegoSettings sharedInstance].userName];
-    [getBizRoomInstance() cteateStreamInRoom:self.liveTitle preferredStreamID:nil];
+    [getBizRoomInstance() cteateStreamInRoom:self.liveTitle preferredStreamID:nil isPublicRoom:NO];
     
     NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"创建流", nil)];
     [self addLogString:logString];
@@ -412,7 +445,7 @@
 
 - (void)getStreamList
 {
-    [getBizRoomInstance() getStreamList];
+    [getBizRoomInstance() getStreamList:NO];
     
     NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"开始获取直播流列表", nil)];
     [self addLogString:logString];
@@ -558,9 +591,12 @@
 }
 
 #pragma mark BizStreamRoom Delegate
-- (void)onLoginRoom:(int)err bizID:(unsigned int)bizID bizToken:(unsigned int)bizToken
+- (void)onLoginRoom:(int)err bizID:(unsigned int)bizID bizToken:(unsigned int)bizToken isPublicRoom:(bool)isPublicRoom
 {
     NSLog(@"%s, error: %d", __func__, err);
+    if (isPublicRoom)
+        return;
+    
     if (err == 0)
     {
         if (bizID != self.privateRoomID)
@@ -587,22 +623,26 @@
     }
 }
 
-- (void)onDisconnected:(int)err bizID:(unsigned int)bizID bizToken:(unsigned int)bizToken
+- (void)onDisconnected:(int)err bizID:(unsigned int)bizID bizToken:(unsigned int)bizToken isPublicRoom:(bool)isPublicRoom
 {
     NSLog(@"%s, error: %d", __func__, err);
 }
 
-- (void)onLeaveRoom:(int)err
+- (void)onLeaveRoom:(int)err isPublicRoom:(bool)isPublicRoom
 {
     NSLog(@"%s, error: %d", __func__, err);
     NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"退出房间, error: %d", nil), err];
     [self addLogString:logString];
     
     [self dismissViewController];
+    [[ZegoDataCenter sharedInstance] registerPrivateRoomDelegate:nil];
 }
 
-- (void)onStreamCreate:(NSString *)streamID url:(NSString *)url
+- (void)onStreamCreate:(NSString *)streamID url:(NSString *)url isPublicRoom:(bool)isPublicRoom
 {
+    if (isPublicRoom)
+        return;
+    
     if (streamID.length != 0)
     {
         NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"创建流成功, streamID:%@", nil), streamID];
@@ -618,8 +658,11 @@
     }
 }
 
-- (void)onStreamUpdate:(NSArray<NSDictionary *> *)streamList flag:(int)flag
+- (void)onStreamUpdate:(NSArray<NSDictionary *> *)streamList flag:(int)flag isPublicRoom:(bool)isPublicRoom
 {
+    if (isPublicRoom)
+        return;
+    
     if (!self.loginChannelSuccess)
     {
         NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"流列表有更新,先缓存", nil)];
@@ -775,7 +818,8 @@
     [self removeStreamViewContainer:self.liveStreamID];
     
     self.isPublishing = NO;
-    self.tipsLabel.text = NSLocalizedString(@"与对方连接中断...", nil);
+    if (self.playStreamList.count == 0)
+        self.tipsLabel.text = NSLocalizedString(@"与对方连接中断...", nil);
 }
 
 - (void)onPlaySucc:(NSString *)streamID channel:(NSString *)channel
@@ -850,5 +894,45 @@
     }
 }
 
+#pragma mark - request video
+- (void)showRequestVideoAlert:(ZegoVideoRequestInfo *)requestInfo
+{
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ 请求与你视频聊天", nil), requestInfo.fromUser.userName];
+    if ([[ZegoSettings sharedInstance] isDeviceiOS7])
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:message delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) otherButtonTitles:NSLocalizedString(@"允许", nil), nil];
+        self.requestAlertContextDict[requestInfo.magicNumber] = alertView;
+        [alertView show];
+    }
+    else
+    {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:message preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [[ZegoDataCenter sharedInstance] agreedVideoTalk:NO magicNumber:requestInfo.magicNumber];
+            [self.requestAlertDict removeObjectForKey:requestInfo.magicNumber];
+        }];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"允许", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[ZegoDataCenter sharedInstance] agreedVideoTalk:YES magicNumber:requestInfo.magicNumber];
+            [self.requestAlertDict removeObjectForKey:requestInfo.magicNumber];
+            [self closeView:nil];
+        }];
+        
+        [alertController addAction:cancelAction];
+        [alertController addAction:okAction];
+        
+        self.requestAlertDict[requestInfo.magicNumber] = alertController;
+        
+        if (self.presentedViewController)
+            [self.presentedViewController presentViewController:alertController animated:YES completion:nil];
+        else
+            [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
+- (void)requestOtherVideo
+{
+    [self closeView:nil];
+}
 
 @end

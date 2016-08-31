@@ -12,6 +12,9 @@
 #import "ZegoMessage.h"
 #import "ZegoVideoCommand.h"
 
+#import <TencentOpenAPI/QQApiInterface.h>
+#import <TencentOpenAPI/QQApiInterfaceObject.h>
+
 NSString *const kUserUpdateNotification             = @"userUpdate";
 NSString *const kUserLoginNotification              = @"userLogin";
 NSString *const kUserDisconnectNotification         = @"userDisconnect";
@@ -21,9 +24,9 @@ NSString *const kUserRequestVideoTalkNotification   = @"requestVideoTalk";
 NSString *const kUserAcceptVideoTalkNotification    = @"acceptVideoTalk";
 NSString *const kUserLeaveRoomNotification          = @"leaveRoom";
 NSString *const kUserRespondVideoTalkNotification   = @"respondVideoTalk";
-NSString *const kUserLeavePrivateRoomNotification   = @"leavePrivateRoom";
 NSString *const kUserCancelVideoTalkNotification    = @"cancelVideoTalk";
 NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
+//NSString *const kUserRequestWhileTalkingNotification = @"requestWileTalking";
 
 @implementation ZegoUserInfo
 
@@ -38,6 +41,8 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
 
 //接收到的请求视频列表
 @property (nonatomic, strong) NSMutableDictionary<NSString*, ZegoVideoRequestInfo*> *receivedRequestList;
+
+@property (nonatomic, weak) id<BizRoomStreamDelegate> privateDelegate;
 
 @end
 
@@ -70,8 +75,6 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
         
         [self setStreamDelegate];
         _isLogin = NO;
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLeavePrivateRoom:) name:kUserLeavePrivateRoomNotification object:nil];
     }
     
     return self;
@@ -80,6 +83,11 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
 - (void)setStreamDelegate
 {
     getBizRoomInstance().streamDelegate = self;
+}
+
+- (void)registerPrivateRoomDelegate:(id<BizRoomStreamDelegate>)privateDelegate
+{
+    self.privateDelegate = privateDelegate;
 }
 
 - (NSString *)getCurrentTime
@@ -114,7 +122,7 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     }
     
     ZegoUser *user = [[ZegoSettings sharedInstance] getZegoUser];
-    [getBizRoomInstance() loginLiveRoom:user.userID userName:user.userName bizToken:0 bizID:[ZegoSettings sharedInstance].bizID];
+    [getBizRoomInstance() loginLiveRoom:user.userID userName:user.userName bizToken:0 bizID:[ZegoSettings sharedInstance].bizID isPublicRoom:YES];
     
     [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"开始登录房间", nil)]];
 }
@@ -127,15 +135,23 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
         return;
     }
     
-    [getBizRoomInstance() leaveLiveRoom];
+    [getBizRoomInstance() leaveLiveRoom:YES];
     
     [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"离开房间", nil)]];
 }
 
 #pragma mark BizStreamDelegate
-- (void)onLoginRoom:(int)err bizID:(unsigned int)bizID bizToken:(unsigned int)bizToken
+- (void)onLoginRoom:(int)err bizID:(unsigned int)bizID bizToken:(unsigned int)bizToken isPublicRoom:(bool)isPublicRoom
 {
-    NSLog(@"%s, error: %d", __func__, err);
+    NSLog(@"%s, error: %d, isPublicRoom:%d", __func__, err, isPublicRoom);
+    
+    if (isPublicRoom == NO)
+    {
+        if ([self.privateDelegate respondsToSelector:@selector(onLoginRoom:bizID:bizToken:isPublicRoom:)])
+            [self.privateDelegate onLoginRoom:err bizID:bizID bizToken:bizToken isPublicRoom:isPublicRoom];
+        
+        return;
+    }
     
     if (err == 0)
     {
@@ -154,17 +170,33 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     [[NSNotificationCenter defaultCenter] postNotificationName:kUserLoginNotification object:nil userInfo:@{@"Result": @(self.isLogin)}];
 }
 
-- (void)onLeaveRoom:(int)err
+- (void)onLeaveRoom:(int)err isPublicRoom:(bool)isPublicRoom
 {
+    if (isPublicRoom == NO)
+    {
+        if ([self.privateDelegate respondsToSelector:@selector(onLeaveRoom:isPublicRoom:)])
+            [self.privateDelegate onLeaveRoom:err isPublicRoom:isPublicRoom];
+        return;
+    }
+    
     [self addLogString:[NSString stringWithFormat:NSLocalizedString(@"离开房间结果. error: %d", nil), err]];
     _isLogin = NO;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kUserLeaveRoomNotification object:nil userInfo:nil];
 }
 
-- (void)onDisconnected:(int)err bizID:(unsigned int)bizID bizToken:(unsigned int)bizToken
+- (void)onDisconnected:(int)err bizID:(unsigned int)bizID bizToken:(unsigned int)bizToken isPublicRoom:(bool)isPublicRoom
 {
     NSLog(@"%s, error: %d", __func__, err);
+    
+    if (isPublicRoom == NO)
+    {
+        if ([self.privateDelegate respondsToSelector:@selector(onDisconnected:bizID:bizToken:isPublicRoom:)])
+            [self.privateDelegate onDisconnected:err bizID:bizID bizToken:bizToken isPublicRoom:isPublicRoom];
+        
+        return;
+    }
+    
     if (err == 0)
     {
         NSString *logString = [NSString stringWithFormat:NSLocalizedString(@"断开房间. token %d, id %d", nil), bizToken, bizID];
@@ -209,8 +241,16 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     [self.userList removeObjectsInArray:filterArray];
 }
 
-- (void)onRoomUserUpdate:(NSArray<NSDictionary *> *)userInfoList flag:(int)flag
+- (void)onRoomUserUpdate:(NSArray<NSDictionary *> *)userInfoList flag:(int)flag isPublicRoom:(bool)isPublicRoom
 {
+    if (isPublicRoom == NO)
+    {
+        if ([self.privateDelegate respondsToSelector:@selector(onRoomUserUpdate:flag:isPublicRoom:)])
+            [self.privateDelegate onRoomUserUpdate:userInfoList flag:flag isPublicRoom:isPublicRoom];
+        
+        return;
+    }
+    
     //for test
     if (flag == 1)
         [self.userList removeAllObjects];
@@ -263,8 +303,16 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     [[NSNotificationCenter defaultCenter] postNotificationName:kUserUpdateNotification object:self userInfo:nil];
 }
 
-- (void)onReceiveMessage:(NSData *)content messageType:(int)type
+- (void)onReceiveMessage:(NSData *)content messageType:(int)type isPublicRoom:(bool)isPublicRoom
 {
+    if (isPublicRoom == NO)
+    {
+        if ([self.privateDelegate respondsToSelector:@selector(onReceiveMessage:messageType:isPublicRoom:)])
+            [self.privateDelegate onReceiveMessage:content messageType:type isPublicRoom:isPublicRoom];
+        
+        return;
+    }
+    
     //收到text消息
     if (type == 1)
     {
@@ -297,6 +345,26 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
         {
             [self onReceiveVideoCancelMessage:dictionary];
         }
+    }
+}
+
+- (void)onStreamCreate:(NSString *)streamID url:(NSString *)url isPublicRoom:(bool)isPublicRoom
+{
+    if (isPublicRoom == NO)
+    {
+        if ([self.privateDelegate respondsToSelector:@selector(onStreamCreate:url:isPublicRoom:)])
+            [self.privateDelegate onStreamCreate:streamID url:url isPublicRoom:isPublicRoom];
+    }
+}
+
+- (void)onStreamUpdate:(NSArray<NSDictionary *> *)streamList flag:(int)flag isPublicRoom:(bool)isPublicRoom
+{
+    if (isPublicRoom == NO)
+    {
+        if ([self.privateDelegate respondsToSelector:@selector(onStreamUpdate:flag:isPublicRoom:)])
+            [self.privateDelegate onStreamUpdate:streamList flag:flag isPublicRoom:isPublicRoom];
+        else
+            NSLog(@"private delegate is nill");
     }
 }
 
@@ -642,14 +710,18 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     ZegoVideoRequestInfo *info = [ZegoVideoCommand getRequestVideoTalkInfo:receiveInfo];
     
     //用户正作为发起方，等待别人同意通话，此时拒绝所有其他请求
+    NSDictionary *userInfo = nil;
     if (self.magicNumber != nil)
     {
-        [ZegoVideoCommand sendRespondVideoTalk:info.fromUser magicNumber:info.magicNumber agreed:NO preferedID:info.preferedRoomID];
-        return;
+        userInfo = @{@"requestInfo": info, @"isTalking": @(YES)};
+    }
+    else
+    {
+        userInfo = @{@"requestInfo": info, @"isTalking": @(NO)};
     }
     
     //通知界面显示弹框，保存中间信息
-    [[NSNotificationCenter defaultCenter] postNotificationName:kUserRequestVideoTalkNotification object:nil userInfo:@{@"requestInfo": info}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kUserRequestVideoTalkNotification object:nil userInfo:userInfo];
     self.receivedRequestList[info.magicNumber] = info;
 }
 
@@ -684,6 +756,9 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     if (agreed)
     {
         //如果同意，通知上层界面进入token定义的房间
+        self.magicNumber = magicNumber;
+        self.preferedID = requestInfo.preferedRoomID;
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:kUserAcceptVideoTalkNotification object:nil userInfo:@{@"roomID": @(requestInfo.preferedRoomID)}];
     }
 }
@@ -694,4 +769,24 @@ NSString *const kUserClearAllSessionNotification   = @"clearAllSession";
     self.preferedID = 0;
 }
 
+- (void)contactUs
+{
+#if defined(__i386__)
+#else
+    if (![QQApiInterface isQQInstalled])
+    {
+        NSString *message = [NSString stringWithFormat:NSLocalizedString(@"联系我们", nil)];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"没有安装QQ", nil) message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alertView show];
+        
+        return;
+    }
+    
+    QQApiWPAObject *wpaObject = [QQApiWPAObject objectWithUin:@"84328558"];
+    SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:wpaObject];
+    QQApiSendResultCode result = [QQApiInterface sendReq:req];
+    NSLog(@"share result %d", result);
+#endif
+}
 @end

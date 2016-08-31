@@ -100,7 +100,12 @@
                     <navigationItem key="navigationItem" title="ZEGO" id="4mu-4K-Gkl">
                         <barButtonItem key="leftBarButtonItem" title="关于" id="ut5-IL-YcK">
                             <connections>
-                                <segue destination="ksQ-Nc-juQ" kind="show" id="xwh-kO-GNA"/>
+                                <segue destination="ksQ-Nc-juQ" kind="show" id="Egv-jq-VTF"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="联系我们" id="94g-7X-QH0">
+                            <connections>
+                                <action selector="onContactUs:" destination="ZZJ-rZ-AP4" id="fEB-G3-Dxx"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -190,9 +195,9 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="ZEGO" id="4Oe-l2-ZA1">
-                        <barButtonItem key="leftBarButtonItem" title="关于" id="j4p-WX-0E7">
+                        <barButtonItem key="leftBarButtonItem" title="联系我们" id="j4p-WX-0E7">
                             <connections>
-                                <segue destination="ksQ-Nc-juQ" kind="show" id="qj8-a9-SA6"/>
+                                <action selector="onContactUs:" destination="rxd-pG-nLR" id="3SJ-96-CYV"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="多人" id="EA9-qT-cOy">
@@ -586,9 +591,14 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="设置" image="btn_user_normal" id="B5z-Up-cvI"/>
                     <navigationItem key="navigationItem" title="ZEGO" id="yR0-cH-bgd">
-                        <barButtonItem key="rightBarButtonItem" title="关于" id="bBQ-FT-RTp">
+                        <barButtonItem key="leftBarButtonItem" title="关于" id="bBQ-FT-RTp">
                             <connections>
                                 <segue destination="ksQ-Nc-juQ" kind="show" id="gMm-8F-fxm"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="联系我们" id="vha-dx-OXJ">
+                            <connections>
+                                <action selector="onContactUs:" destination="NCT-97-Ir1" id="eAg-P5-QC6"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -770,11 +780,11 @@
                         <viewControllerLayoutGuide type="bottom" id="fen-YA-YTs"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ssu-mw-LKX">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qVi-kr-u5Q">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="522"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="517"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <outlet property="dataSource" destination="gUo-Nn-kiZ" id="Md1-Zg-MnX"/>
@@ -782,7 +792,7 @@
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvl-VL-VSO" userLabel="chat Input" customClass="ZegoChatInput">
-                                <rect key="frame" x="0.0" y="522" width="600" height="34"/>
+                                <rect key="frame" x="0.0" y="517" width="600" height="34"/>
                                 <subviews>
                                     <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WwT-Qz-eFy">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="34"/>
@@ -1148,7 +1158,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XlC-90-Ayi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2505" y="826"/>
+            <point key="canvasLocation" x="2336" y="776"/>
         </scene>
         <!--Zego Anchor Option View Controller-->
         <scene sceneID="BFo-I3-A32">
@@ -1343,8 +1353,8 @@
         <image name="btn_user_normal" width="27" height="27"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gUn-aK-0L4"/>
-        <segue reference="ZRp-iY-VOj"/>
         <segue reference="s1i-Jg-SAf"/>
+        <segue reference="gUn-aK-0L4"/>
+        <segue reference="3pi-Hu-p8s"/>
     </inferredMetricsTieBreakers>
 </document>

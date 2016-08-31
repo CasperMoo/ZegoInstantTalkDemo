@@ -9,11 +9,11 @@ import com.zego.instanttalk.MainActivity;
 import com.zego.instanttalk.R;
 import com.zego.instanttalk.adapter.ListSessionAdapter;
 import com.zego.instanttalk.adapter.SpaceItemDecoration;
-import com.zego.instanttalk.base.AbsBaseFragment;
+import com.zego.instanttalk.ui.base.AbsBaseFragment;
 import com.zego.instanttalk.entities.SessionInfo;
 import com.zego.instanttalk.interfaces.OnUpdateSessionInfoListener;
 import com.zego.instanttalk.presenters.TextMessagePresenter;
-import com.zego.instanttalk.ui.acivities.ChatActivity;
+import com.zego.instanttalk.ui.acivities.TextChatActivity;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -62,7 +62,7 @@ public class SessionListFragment extends AbsBaseFragment {
                     listToUser.add(user);
                 }
 
-                ChatActivity.actionStart(mParentActivity, listToUser, sessionInfo.getSession());
+                TextChatActivity.actionStart(mParentActivity, listToUser, sessionInfo.getSession());
             }
 
             @Override

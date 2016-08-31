@@ -113,9 +113,6 @@
 
 - (void)showRequestVideoAlert:(ZegoVideoRequestInfo *)requestInfo
 {
-    if (self.presentedViewController)
-        [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-    
     NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ 请求与你视频聊天", nil), requestInfo.fromUser.userName];
     if ([[ZegoSettings sharedInstance] isDeviceiOS7])
     {
@@ -141,7 +138,10 @@
         
         self.requestAlertDict[requestInfo.magicNumber] = alertController;
         
-        [self presentViewController:alertController animated:YES completion:nil];
+        if (self.presentedViewController)
+            [self.presentedViewController presentViewController:alertController animated:YES completion:nil];
+        else
+            [self presentViewController:alertController animated:YES completion:nil];
     }
 }
 
@@ -151,7 +151,15 @@
     if (requestInfo == nil)
         return;
     
-    [self showRequestVideoAlert:requestInfo];
+    BOOL isTalking = [notification.userInfo[@"isTalking"] boolValue];
+    
+    if (isTalking == NO)
+        [self showRequestVideoAlert:requestInfo];
+    else if ([self.presentedViewController isKindOfClass:[ZegoVideoTalkViewController class]])
+    {
+        ZegoVideoTalkViewController *videoViewController = (ZegoVideoTalkViewController *)self.presentedViewController;
+        [videoViewController showRequestVideoAlert:requestInfo];
+    }
 }
 
 - (void)onReceiveCancelVideoTalk:(NSNotification *)notification
@@ -163,6 +171,8 @@
     UIAlertController *alertController = [self.requestAlertDict objectForKey:magicNumber];
     if (alertController)
         [alertController dismissViewControllerAnimated:YES completion:nil];
+    
+    [self.requestAlertDict removeObjectForKey:magicNumber];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -195,6 +205,8 @@
             if (alertView)
                 [alertView dismissWithClickedButtonIndex:0 animated:YES];
         }
+        
+        [self.requestAlertContextDict removeAllObjects];
     }
     else
     {

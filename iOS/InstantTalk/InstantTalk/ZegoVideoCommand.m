@@ -82,7 +82,7 @@
     NSArray *notSelfMemberArray = [toUserList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"userID != %@", [ZegoSettings sharedInstance].userID]];
     NSString *sendContent = [self formatVideoTalk:kZEGO_VIDEO_REQUEST_COMMAND toUserList:notSelfMemberArray magicNumber:magicNumber agreed:YES roomID:roomID];
     if (sendContent)
-        [getBizRoomInstance() sendBroadcastTextMsgInChatRoom:sendContent];
+        [getBizRoomInstance() sendBroadcastTextMsgInChatRoom:sendContent isPublicRoom:YES];
 }
 
 + (void)sendCancelVideoTalk:(NSArray<ZegoUser *> *)toUserList magicNumber:(NSString *)magicNumber
@@ -93,7 +93,7 @@
     NSArray *notSelfMemberArray = [toUserList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"userID != %@", [ZegoSettings sharedInstance].userID]];
     NSString *sendContent = [self formatVideoTalk:kZEGO_VIDEO_CANCEL_COMMAND toUserList:notSelfMemberArray magicNumber:magicNumber agreed:NO roomID:0];
     if (sendContent)
-        [getBizRoomInstance() sendBroadcastTextMsgInChatRoom:sendContent];
+        [getBizRoomInstance() sendBroadcastTextMsgInChatRoom:sendContent isPublicRoom:YES];
 }
 
 + (void)sendRespondVideoTalk:(ZegoUser *)toUser magicNumber:(NSString *)magicNumber agreed:(BOOL)agreed preferedID:(unsigned int)roomID
@@ -103,7 +103,7 @@
     
     NSString *sendContent = [self formatVideoTalk:kZEGO_VIDEO_RESPOND_COMMAND toUserList:@[toUser] magicNumber:magicNumber agreed:agreed roomID:roomID];
     if (sendContent)
-        [getBizRoomInstance() sendBroadcastTextMsgInChatRoom:sendContent];
+        [getBizRoomInstance() sendBroadcastTextMsgInChatRoom:sendContent isPublicRoom:YES];
 }
 
 + (BOOL)agreedVideoTalk:(NSDictionary *)respondInfo expectMagicNumber:(NSString *)magicNumber expectedID:(unsigned int)roomID result:(BOOL *)result

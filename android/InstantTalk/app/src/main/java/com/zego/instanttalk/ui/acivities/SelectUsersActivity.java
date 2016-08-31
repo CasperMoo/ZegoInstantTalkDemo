@@ -12,7 +12,7 @@ import com.zego.biz.BizUser;
 import com.zego.instanttalk.R;
 import com.zego.instanttalk.adapter.SelectUsersAdapter;
 import com.zego.instanttalk.adapter.SpaceItemDecoration;
-import com.zego.instanttalk.base.AbsBaseActivity;
+import com.zego.instanttalk.ui.base.AbsBaseActivity;
 import com.zego.instanttalk.constants.Constants;
 import com.zego.instanttalk.constants.IntentExtra;
 import com.zego.instanttalk.presenters.UserListPresenter;
@@ -110,10 +110,10 @@ public class SelectUsersActivity extends AbsBaseActivity {
     @OnClick(R.id.tv_ok)
     public void ok(){
         if(mChatType == Constants.CHAT_TYPE_TEXT){
-            ChatActivity.actionStart(this, mListSelectedUser, null);
+            TextChatActivity.actionStart(this, mListSelectedUser, null);
             finish();
         }else if(mChatType == Constants.CHAT_TYPE_VIDEO){
-            PlayActivity.actionStart(SelectUsersActivity.this, mListSelectedUser);
+            HostActivity.actionStart(SelectUsersActivity.this, mListSelectedUser);
             finish();
         }
     }

@@ -8,11 +8,11 @@ import com.zego.biz.BizUser;
 import com.zego.instanttalk.R;
 import com.zego.instanttalk.adapter.ListUserAdapter;
 import com.zego.instanttalk.adapter.SpaceItemDecoration;
-import com.zego.instanttalk.base.AbsBaseFragment;
+import com.zego.instanttalk.ui.base.AbsBaseFragment;
 import com.zego.instanttalk.interfaces.UserListView;
 import com.zego.instanttalk.presenters.UserListPresenter;
-import com.zego.instanttalk.ui.acivities.ChatActivity;
-import com.zego.instanttalk.ui.acivities.PlayActivity;
+import com.zego.instanttalk.ui.acivities.TextChatActivity;
+import com.zego.instanttalk.ui.acivities.HostActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +54,14 @@ public class UserListFragment extends AbsBaseFragment {
             public void onItemClick(View view, BizUser user) {
                 ArrayList<BizUser> listToUser = new ArrayList<>();
                 listToUser.add(user);
-                ChatActivity.actionStart(mParentActivity, listToUser, null);
+                TextChatActivity.actionStart(mParentActivity, listToUser, null);
             }
 
             @Override
             public void onVideoTalkClick(View view, BizUser user) {
                 ArrayList<BizUser> listToUser = new ArrayList<>();
                 listToUser.add(user);
-                PlayActivity.actionStart(mParentActivity, listToUser);
+                HostActivity.actionStart(mParentActivity, listToUser);
             }
         });
 

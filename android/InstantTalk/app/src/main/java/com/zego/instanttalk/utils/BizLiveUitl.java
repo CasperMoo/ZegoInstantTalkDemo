@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.zego.biz.BizUser;
-import com.zego.instanttalk.BizApiManager;
 import com.zego.instanttalk.ZegoApplication;
 
 import java.io.IOException;
@@ -84,89 +83,11 @@ public class BizLiveUitl {
         return "Android-" + userID;
     }
 
-    /**
-     * 发送请求视频聊天的消息.
-     *
-     * @param listToUsers
-     * @param magic
-     * @param roomID
-     * @return
-     */
-    public static void requestVideoChat(List<BizUser> listToUsers, String magic, long roomID) {
-
-        if (listToUsers == null || listToUsers.size() == 0) {
-            return;
-        }
-
-        String data = formatVideoChatMsg(KEY_VIDEO_REQUEST_COMMAND, listToUsers, magic, true, roomID);
-
-        if (TextUtils.isEmpty(data)) {
-            return;
-        }
-
-        BizApiManager.getInstance().getBizLiveRoom().sendBroadcastTextMsg(data);
-    }
-
-    /**
-     * 发送响应视频聊天的消息.
-     *
-     * @param listToUsers
-     * @param magic
-     * @param isAgreed
-     * @param roomKey
-     * @return
-     */
-    public static void respondVideoChat(List<BizUser> listToUsers, String magic, boolean isAgreed, long roomKey) {
-
-        if (listToUsers == null || listToUsers.size() == 0) {
-            return;
-        }
-
-        String data = formatVideoChatMsg(KEY_VIDEO_RESPOND_COMMAND, listToUsers, magic, isAgreed, roomKey);
-
-        if (TextUtils.isEmpty(data)) {
-            return;
-        }
-
-        BizApiManager.getInstance().getBizLiveRoom().sendBroadcastTextMsg(data);
-
-    }
-
-    /**
-     * 发送取消视频聊天的消息.
-     *
-     * @param listToUsers
-     * @param magic
-     * @param isAgreed
-     * @param roomKey
-     * @return
-     */
-    public static void cancelVideoChat(List<BizUser> listToUsers, String magic, boolean isAgreed, long roomKey) {
-
-        if (listToUsers == null || listToUsers.size() == 0) {
-            return;
-        }
-
-        String data = formatVideoChatMsg(KEY_VIDEO_CANCEL_COMMAND, listToUsers, magic, isAgreed, roomKey);
-
-        if (TextUtils.isEmpty(data)) {
-            return;
-        }
-
-        BizApiManager.getInstance().getBizLiveRoom().sendBroadcastTextMsg(data);
-    }
 
     /**
      * 格式化消息.
-     *
-     * @param command
-     * @param listToUsers
-     * @param magic
-     * @param isAgreed
-     * @param roomKey
-     * @return
      */
-    private static String formatVideoChatMsg(String command, List<BizUser> listToUsers, String magic, boolean isAgreed, long roomKey) {
+    public static String formatVideoChatMsg(String command, List<BizUser> listToUsers, String magic, boolean isAgreed, long roomKey) {
 
         if (TextUtils.isEmpty(command) || TextUtils.isEmpty(magic)) {
             return null;
@@ -204,9 +125,12 @@ public class BizLiveUitl {
         return (new Gson()).toJson(sendInfo);
     }
 
-    public static void sendTextMsg(final String session, final List<BizUser> listToUser, final String content) {
+    /**
+     * 格式化文本消息.
+     */
+    public static String  formatTextMsg(final String session, final List<BizUser> listToUser, final String content) {
         if (TextUtils.isEmpty(session) || TextUtils.isEmpty(content) || listToUser == null || listToUser.size() == 0) {
-            return;
+            return null;
         }
 
         Map<String, Object> sendInfo = new HashMap<>();
@@ -230,9 +154,6 @@ public class BizLiveUitl {
 
         sendInfo.put(KEY_TALK_CONTENT, content);
 
-        String data = (new Gson()).toJson(sendInfo);
-        if (!TextUtils.isEmpty(data)) {
-            BizApiManager.getInstance().getBizLiveRoom().sendBroadcastTextMsg(data);
-        }
+        return (new Gson()).toJson(sendInfo);
     }
 }

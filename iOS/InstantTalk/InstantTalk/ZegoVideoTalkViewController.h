@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ZegoSettings.h"
 #import "ZegoLiveViewController.h"
+#import "ZegoVideoCommand.h"
 
 @interface ZegoVideoTalkViewController : ZegoLiveViewController
 
@@ -16,5 +17,7 @@
 @property (nonatomic, assign) BOOL isRequester;
 @property (nonatomic, strong) NSArray<ZegoUser *> *userList;
 @property (nonatomic, assign) unsigned int privateRoomID;
+
+- (void)showRequestVideoAlert:(ZegoVideoRequestInfo *)requestInfo;
 
 @end

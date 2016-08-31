@@ -17,6 +17,7 @@
     <string name="modify_appid_and_appsign">Modify</string>
     <string name="quality_options">QualityOptions:</string>
     <string name="upload_log">Upload Log</string>
+    <string name="contact_us">Contact Us</string>
     <string name="about">About</string>
     <string name="upload_log_successfully">Log has been uploaded successfully</string>
     <string name="modify_video_configs_successfully">Modify video configs successfully</string>

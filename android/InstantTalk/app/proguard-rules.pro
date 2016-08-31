@@ -16,6 +16,7 @@
 #   public *;
 #}
 -keep class com.zego.**{*;}
+-keep class com.google.**{*;}
 
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**

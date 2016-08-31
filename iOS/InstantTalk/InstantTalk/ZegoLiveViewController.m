@@ -194,9 +194,9 @@
 {
     ZegoUser *user = [[ZegoSettings sharedInstance] getZegoUser];
     if (success)
-        [getBizRoomInstance() reportStreamAction:1 streamID:streamID userID:user.userID];
+        [getBizRoomInstance() reportStreamAction:1 streamID:streamID userID:user.userID isPublicRoom:NO];
     else
-        [getBizRoomInstance() reportStreamAction:2 streamID:streamID userID:user.userID];
+        [getBizRoomInstance() reportStreamAction:2 streamID:streamID userID:user.userID isPublicRoom:NO];
 }
 
 - (void)addFirstPlayViewConstraints:(UIView *)firstView containerView:(UIView *)containerView

@@ -299,7 +299,7 @@ public class TextMessagePresenter {
                     return;
                 }
 
-                BizLiveUitl.sendTextMsg(session, listToUser, content);
+                BizLivePresenter.getInstance().sendTextMsg(session, listToUser, content);
 
                 SessionInfo oldSessionInfo = null;
                 for (SessionInfo sessionInfo : mListSessionInfo) {

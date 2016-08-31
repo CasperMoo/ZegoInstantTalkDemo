@@ -12,16 +12,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.zego.biz.BizStream;
+import com.tencent.tauth.Tencent;
 import com.zego.biz.BizUser;
-import com.zego.instanttalk.base.AbsBaseActivity;
-import com.zego.instanttalk.base.AbsBaseFragment;
 import com.zego.instanttalk.constants.Constants;
-import com.zego.instanttalk.interfaces.VideoTalkView;
+import com.zego.instanttalk.interfaces.OnPublicRoomListener;
 import com.zego.instanttalk.presenters.BizLivePresenter;
 import com.zego.instanttalk.ui.acivities.AboutZegoActivity;
-import com.zego.instanttalk.ui.acivities.PublishActivity;
+import com.zego.instanttalk.ui.acivities.GuestActivity;
 import com.zego.instanttalk.ui.acivities.SelectUsersActivity;
+import com.zego.instanttalk.ui.base.AbsBaseActivity;
+import com.zego.instanttalk.ui.base.AbsBaseFragment;
 import com.zego.instanttalk.ui.fragments.SelectChatFragmentDialog;
 import com.zego.instanttalk.ui.fragments.SessionListFragment;
 import com.zego.instanttalk.ui.fragments.SettingFragment;
@@ -116,14 +116,15 @@ public class MainActivity extends AbsBaseActivity implements NavigationBar.Navig
     @Override
     protected void loadData(Bundle savedInstanceState) {
         // 登陆公共房间
-        BizLivePresenter.getInstance().loginCommonRoom();
+        BizLivePresenter.getInstance().loginPublicRoom();
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        BizLivePresenter.getInstance().setVideoTalkView(new VideoTalkView() {
+        BizLivePresenter.getInstance().setOnPublicRoomListener(new OnPublicRoomListener() {
             @Override
             public void onLoginSuccessfully(long roomKey, long serverKey) {
 
@@ -136,7 +137,7 @@ public class MainActivity extends AbsBaseActivity implements NavigationBar.Navig
 
             @Override
             public void onLeaveRoom(int errCode) {
-                BizLivePresenter.getInstance().loginCommonRoom();
+                BizLivePresenter.getInstance().loginPublicRoom();
             }
 
             @Override
@@ -155,21 +156,6 @@ public class MainActivity extends AbsBaseActivity implements NavigationBar.Navig
             }
 
             @Override
-            public void onStreamCreate(String streamID, String url) {
-
-            }
-
-            @Override
-            public void onStreamAdd(BizStream[] bizStreams) {
-
-            }
-
-            @Override
-            public void onStreamDelete(BizStream[] bizStreams) {
-
-            }
-
-            @Override
             public void onShowRequestMsg(final List<BizUser> listToUser, final String magic, final long roomKey, String fromUserName) {
                 mDialogHandleRequestPublish = new AlertDialog.Builder(MainActivity.this).setTitle(getString(R.string.hint)).
                         setMessage(getString(R.string.someone_is_requesting_to_chat_with_you, fromUserName)).setPositiveButton(getString(R.string.Allow),
@@ -181,7 +167,7 @@ public class MainActivity extends AbsBaseActivity implements NavigationBar.Navig
                                 for(BizUser user : listToUser){
                                     arrayList.add(user);
                                 }
-                                PublishActivity.actionStart(MainActivity.this, arrayList, roomKey);
+                                GuestActivity.actionStart(MainActivity.this, arrayList, roomKey);
                                 dialog.dismiss();
                             }
                         }).setNegativeButton(getString(R.string.Deny), new DialogInterface.OnClickListener() {
@@ -193,10 +179,6 @@ public class MainActivity extends AbsBaseActivity implements NavigationBar.Navig
                 }).create();
 
                 mDialogHandleRequestPublish.show();
-            }
-
-            @Override
-            public void onShowRespondMsg(boolean isRespondToMyRequest, long roomKey, boolean isAgreed, String fromUserName) {
             }
 
         }, mHandler);
@@ -235,7 +217,10 @@ public class MainActivity extends AbsBaseActivity implements NavigationBar.Navig
         } else {
             // 释放Zego sdk
             ZegoApiManager.getInstance().releaseSDK();
-            BizApiManager.getInstance().releaseSDK();
+
+            // 退出大厅
+            BizLivePresenter.getInstance().leavePublicRoom();
+            BizLivePresenter.getInstance().uninit();
             System.exit(0);
         }
     }
@@ -253,6 +238,11 @@ public class MainActivity extends AbsBaseActivity implements NavigationBar.Navig
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        if(id == R.id.action_contact_us){
+            Tencent.createInstance("", MainActivity.this).startWPAConversation(MainActivity.this, "84328558", "");
+            return true;
+        }
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {

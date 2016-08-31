@@ -20,9 +20,9 @@ extern NSString *const kUserRequestVideoTalkNotification;
 extern NSString *const kUserAcceptVideoTalkNotification;
 extern NSString *const kUserLeaveRoomNotification;
 extern NSString *const kUserRespondVideoTalkNotification;
-extern NSString *const kUserLeavePrivateRoomNotification;
 extern NSString *const kUserCancelVideoTalkNotification;
 extern NSString *const kUserClearAllSessionNotification;
+//extern NSString *const kUserRequestWhileTalkingNotification;
 
 @interface ZegoUserInfo : NSObject
 
@@ -91,5 +91,10 @@ extern NSString *const kUserClearAllSessionNotification;
 
 //用户同意/拒绝视频聊天
 - (void)agreedVideoTalk:(BOOL)agreed magicNumber:(NSString *)magicNumber;
+
+- (void)registerPrivateRoomDelegate:(id<BizRoomStreamDelegate>)privateDelegate;
+
+- (void)contactUs;
+
 
 @end

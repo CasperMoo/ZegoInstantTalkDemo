@@ -20,11 +20,10 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.zego.biz.BizLiveRoom;
-import com.zego.instanttalk.BizApiManager;
 import com.zego.instanttalk.R;
 import com.zego.instanttalk.ZegoApiManager;
-import com.zego.instanttalk.base.AbsShowActivity;
+import com.zego.instanttalk.presenters.BizLivePresenter;
+import com.zego.instanttalk.ui.base.AbsShowActivity;
 import com.zego.instanttalk.ui.widgets.PublishSettingsPannel;
 import com.zego.instanttalk.ui.widgets.ViewLive;
 import com.zego.instanttalk.utils.PreferenceUtil;
@@ -49,58 +48,50 @@ import butterknife.OnClick;
  */
 public abstract class BaseLiveActivity extends AbsShowActivity {
 
-    public static final String KEY_CHANNEL = "KEY_CHANNEL";
+    private static final String KEY_CHANNEL = "KEY_CHANNEL";
 
-    public static final String KEY_PUBLISH_TITLE = "KEY_PUBLISH_TITLE";
+    private static final String KEY_PUBLISH_TITLE = "KEY_PUBLISH_TITLE";
 
-    public static final String KEY_PUBLISH_STREAM_ID = "KEY_PUBLISH_STREAM_ID";
+    private static final String KEY_PUBLISH_STREAM_ID = "KEY_PUBLISH_STREAM_ID";
 
-    public static final String KEY_IS_PUBLISHING = "KEY_IS_PUBLISHING";
+    private static final String KEY_ENABLE_CAMERA = "KEY_ENABLE_CAMERA";
 
-    public static final String KEY_ENABLE_CAMERA = "KEY_ENABLE_CAMERA";
+    private static final String KEY_ENABLE_FRONT_CAM = "KEY_ENABLE_FRONT_CAM";
 
-    public static final String KEY_ENABLE_FRONT_CAM = "KEY_ENABLE_FRONT_CAM";
+    private static final String KEY_ENABLE_TORCH = "KEY_ENABLE_TORCH";
 
-    public static final String KEY_ENABLE_TORCH = "KEY_ENABLE_TORCH";
+    private static final String KEY_ENABLE_MIC = "KEY_ENABLE_MIC";
 
-    public static final String KEY_ENABLE_SPEAKER = "KEY_ENABLE_SPEAKER";
+    private static final String KEY_HAVE_LOGINNED_CHANNEL = "KEY_HAVE_LOGINNED_CHANNEL";
 
-    public static final String KEY_ENABLE_MIC = "KEY_ENABLE_MIC";
+    private static final String KEY_SELECTED_BEAUTY = "KEY_SELECTED_BEAUTY";
 
-    public static final String KEY_HAVE_LOGINNED_CHANNEL = "KEY_HAVE_LOGINNED_CHANNEL";
+    private static final String KEY_SELECTED_FILTER = "KEY_SELECTED_FILTER";
 
-    public static final String KEY_SELECTED_BEAUTY = "KEY_SELECTED_BEAUTY";
-
-    public static final String KEY_SELECTED_FILTER = "KEY_SELECTED_FILTER";
-
-    public static final String KEY_LIST_LIVEVIEW_TAG = "KEY_LIST_LIVEVIEW_TAG";
+    private static final String KEY_LIST_LIVEVIEW_TAG = "KEY_LIST_LIVEVIEW_TAG";
 
     public static final String KEY_LIST_LOG = "KEY_LIST_LOG";
 
-    public static final String KEY_CAMERA_CAPTURE_ROTATION = "KEY_CAMERA_CAPTURE_ROTATION";
+    private static final String KEY_CAMERA_CAPTURE_ROTATION = "KEY_CAMERA_CAPTURE_ROTATION";
 
-    public static final String EMPTY_STREAM_ID = "EMPTY_STREAM_ID";
+    private static final String EMPTY_STREAM_ID = "EMPTY_STREAM_ID";
 
     protected ZegoAVKit mZegoAVKit;
 
-    protected BizLiveRoom mBizLiveRoom;
+    private LinkedList<ViewLive> mListViewLive = new LinkedList<>();
+    private List<String> mListLiveViewTag = new ArrayList<>();
+    private List<String> mListLiveViewTagForCallComing = new ArrayList<>();
+    private LinkedHashMap<ZegoAVKitCommon.ZegoRemoteViewIndex, String> mMapFreeViewIndex;
+    private LinkedList<String> mListLog = new LinkedList<>();
+    private Map<String, Boolean> mMapReplayStreamID = new HashMap<>();
 
-    protected LinkedList<ViewLive> mListViewLive = new LinkedList<>();
-    protected List<String> mListLiveViewTag = new ArrayList<>();
-    protected List<String> mListLiveViewTagForCallComing = new ArrayList<>();
-    protected LinkedHashMap<ZegoAVKitCommon.ZegoRemoteViewIndex, String> mMapFreeViewIndex = new LinkedHashMap<>();
-    protected LinkedList<String> mListLog = new LinkedList<>();
-    protected Map<String, Boolean> mMapReplayStreamID = new HashMap<>();
+    private BottomSheetBehavior mBehavior;
 
-    public TextView tvPublishSetting;
+    private RelativeLayout mRlytControlHeader;
 
-    public BottomSheetBehavior mBehavior;
+    private TextView mTvMainMsg;
 
-    public RelativeLayout mRlytControlHeader;
-
-    protected TextView mTvMainMsg;
-
-    protected TextView mTvSubMsg;
+    private TextView mTvSubMsg;
 
     protected String mPublishTitle;
 
@@ -108,39 +99,37 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
 
     protected String mChannel;
 
-    protected boolean mIsPublishing = false;
+    private boolean mEnableCamera = true;
 
-    protected boolean mEnableSpeaker = true;
+    private boolean mEnableFrontCam = true;
 
-    protected boolean mEnableCamera = true;
+    private boolean mEnableMic = true;
 
-    protected boolean mEnableFrontCam = true;
+    private boolean mEnableTorch = false;
 
-    protected boolean mEnableMic = true;
+    private int mSelectedBeauty = 0;
 
-    protected boolean mEnableTorch = false;
-
-    protected int mSelectedBeauty = 0;
-
-    protected int mSelectedFilter = 0;
+    private int mSelectedFilter = 0;
 
     protected boolean mHaveLoginedChannel = false;
 
-    protected boolean mHostHasBeenCalled = false;
+    private boolean mHostHasBeenCalled = false;
 
-    protected ZegoAVKitCommon.ZegoCameraCaptureRotation mZegoCameraCaptureRotation = ZegoAVKitCommon.ZegoCameraCaptureRotation.Rotate_0;
+    private ZegoAVKitCommon.ZegoCameraCaptureRotation mZegoCameraCaptureRotation = ZegoAVKitCommon.ZegoCameraCaptureRotation.Rotate_0;
 
-    protected DisplayManager.DisplayListener mDisplayListener;
+    private DisplayManager.DisplayListener mDisplayListener;
 
-    protected PhoneStateListener mPhoneStateListener;
+    private PhoneStateListener mPhoneStateListener;
 
     protected abstract void doLiveBusinessAfterLoginChannel();
-
-    protected abstract void hidePlayBackground();
 
     protected abstract void afterPlayingSuccess(String streamID);
 
     protected abstract void afterPlayingStop(String streamID);
+
+    protected abstract void afterPublishingSuccess(String streamID);
+
+    protected abstract void afterPublishingStop(String streamID);
 
 
     @Override
@@ -156,10 +145,8 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
             mChannel = PreferenceUtil.getInstance().getStringValue(KEY_CHANNEL, null);
             mPublishTitle = PreferenceUtil.getInstance().getStringValue(KEY_PUBLISH_TITLE, null);
             mPublishStreamID = PreferenceUtil.getInstance().getStringValue(KEY_PUBLISH_STREAM_ID, null);
-            mIsPublishing = PreferenceUtil.getInstance().getBooleanValue(KEY_IS_PUBLISHING, false);
             mEnableFrontCam = PreferenceUtil.getInstance().getBooleanValue(KEY_ENABLE_FRONT_CAM, false);
             mEnableTorch = PreferenceUtil.getInstance().getBooleanValue(KEY_ENABLE_TORCH, false);
-            mEnableSpeaker = PreferenceUtil.getInstance().getBooleanValue(KEY_ENABLE_SPEAKER, false);
             mEnableMic = PreferenceUtil.getInstance().getBooleanValue(KEY_ENABLE_MIC, false);
             mEnableCamera = PreferenceUtil.getInstance().getBooleanValue(KEY_ENABLE_CAMERA, false);
             mHaveLoginedChannel = PreferenceUtil.getInstance().getBooleanValue(KEY_HAVE_LOGINNED_CHANNEL, false);
@@ -185,8 +172,7 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
     protected void initVariables(final Bundle savedInstanceState) {
 
         mZegoAVKit = ZegoApiManager.getInstance().getZegoAVKit();
-        mBizLiveRoom = BizApiManager.getInstance().getBizLiveRoom();
-
+        mMapFreeViewIndex = new LinkedHashMap<>();
         mMapFreeViewIndex.put(ZegoAVKitCommon.ZegoRemoteViewIndex.First, EMPTY_STREAM_ID);
         mMapFreeViewIndex.put(ZegoAVKitCommon.ZegoRemoteViewIndex.Second, EMPTY_STREAM_ID);
         mMapFreeViewIndex.put(ZegoAVKitCommon.ZegoRemoteViewIndex.Third, EMPTY_STREAM_ID);
@@ -220,7 +206,6 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
                 if (mZegoCameraCaptureRotation != null) {
                     mZegoAVKit.setDisplayRotation(mZegoCameraCaptureRotation);
                 }
-
             }
 
             @Override
@@ -265,7 +250,6 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
     @Override
     protected void initViews(Bundle savedInstanceState) {
 
-        tvPublishSetting = (TextView) findViewById(R.id.tv_publish_settings);
         mRlytControlHeader = (RelativeLayout) findViewById(R.id.rlyt_control_header);
 
         initSettingPannel();
@@ -300,9 +284,13 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
             });
             mListViewLive.add(vlSmallView2);
         }
+    }
 
-        mZegoAVKit.enableSpeaker(mEnableSpeaker);
-
+    @Override
+    protected void doBusiness(Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+            replayAndRepublish();
+        }
     }
 
     @Override
@@ -313,11 +301,9 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
         PreferenceUtil.getInstance().setStringValue(KEY_CHANNEL, mChannel);
         PreferenceUtil.getInstance().setStringValue(KEY_PUBLISH_TITLE, mPublishTitle);
         PreferenceUtil.getInstance().setStringValue(KEY_PUBLISH_STREAM_ID, mPublishStreamID);
-        PreferenceUtil.getInstance().setBooleanValue(KEY_IS_PUBLISHING, mIsPublishing);
         PreferenceUtil.getInstance().setBooleanValue(KEY_ENABLE_CAMERA, mEnableCamera);
         PreferenceUtil.getInstance().setBooleanValue(KEY_ENABLE_FRONT_CAM, mEnableFrontCam);
         PreferenceUtil.getInstance().setBooleanValue(KEY_ENABLE_TORCH, mEnableTorch);
-        PreferenceUtil.getInstance().setBooleanValue(KEY_ENABLE_SPEAKER, mEnableSpeaker);
         PreferenceUtil.getInstance().setBooleanValue(KEY_ENABLE_MIC, mEnableMic);
         PreferenceUtil.getInstance().setBooleanValue(KEY_HAVE_LOGINNED_CHANNEL, mHaveLoginedChannel);
         PreferenceUtil.getInstance().setIntValue(KEY_SELECTED_BEAUTY, mSelectedBeauty);
@@ -327,7 +313,7 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
 
         mListLiveViewTag = new ArrayList<>();
         for (int i = 0, size = mListViewLive.size(); i < size; i++) {
-            mListLiveViewTag.add((String) mListViewLive.get(i).getTag());
+            mListLiveViewTag.add(mListViewLive.get(i).getLiveTag());
         }
         PreferenceUtil.getInstance().setObjectToString(KEY_LIST_LIVEVIEW_TAG, mListLiveViewTag);
 
@@ -360,21 +346,6 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
         } else {
             changeRotation();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        // 注销屏幕监听
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
-            displayManager.unregisterDisplayListener(mDisplayListener);
-        }
-
-        // 注销电话监听
-        TelephonyManager tm = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
-        tm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
-
-        super.onDestroy();
     }
 
     /**
@@ -412,7 +383,7 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
                     startPlay(streamID, ZegoAVKitUtil.getZegoRemoteViewIndexByOrdinal(streamOrdinal));
                     break;
                 case ViewLive.PUBLISH_STREAM_ORDINAL:
-                    mBizLiveRoom.createSreamInRoom(mPublishTitle, mPublishStreamID);
+                    BizLivePresenter.getInstance().createStreamInPrivateRoom(mPublishTitle, mPublishStreamID);
                     break;
             }
         }
@@ -513,9 +484,15 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
 
                     if (!mHaveLoginedChannel) {
                         mHaveLoginedChannel = true;
+
+                        doLiveBusinessAfterLoginChannel();
                     }
 
-                    doLiveBusinessAfterLoginChannel();
+                    if (mHostHasBeenCalled) {
+                        mHostHasBeenCalled = false;
+                        // 挂断电话重新恢复
+                        replayAndRepublishAfterRingOff();
+                    }
 
                 } else {
                     printLog(getString(R.string.myself, getString(R.string.login_channel_failed, channel, retCode + "")));
@@ -524,25 +501,26 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
 
             @Override
             public void onPublishSucc(String streamID, String liveChannel, HashMap<String, Object> info) {
-                mIsPublishing = true;
-                mBizLiveRoom.reportStreamState(true, streamID, PreferenceUtil.getInstance().getUserID());
                 mRlytControlHeader.bringToFront();
 
                 printLog(getString(R.string.myself, getString(R.string.publish_stream_success, streamID)));
+
+                afterPublishingSuccess(streamID);
             }
 
             @Override
             public void onPublishStop(int retCode, String streamID, String liveChannel) {
-                mIsPublishing = false;
                 // 停止预览
                 mZegoAVKit.stopPreview();
                 // 释放View
                 releaseTextureViewAndRemoteViewIndex(streamID);
 
-                mBizLiveRoom.reportStreamState(false, streamID, PreferenceUtil.getInstance().getUserID());
                 mRlytControlHeader.bringToFront();
 
                 printLog(getString(R.string.myself, getString(R.string.publish_stream_failed, streamID, retCode + "")));
+
+
+                afterPublishingStop(streamID);
             }
 
             @Override
@@ -578,7 +556,6 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
 
             @Override
             public void onVideoSizeChanged(String streamID, int width, int height) {
-                hidePlayBackground();
             }
 
             @Override
@@ -645,10 +622,10 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
                         mHostHasBeenCalled = true;
                         mListLiveViewTagForCallComing = new ArrayList<>();
                         for (int i = 0, size = mListViewLive.size(); i < size; i++) {
-                            mListLiveViewTagForCallComing.add((String) mListViewLive.get(i).getTag());
+                            mListLiveViewTagForCallComing.add(mListViewLive.get(i).getLiveTag());
                         }
                         // 来电停止发布与播放
-                        stopAllStream();
+                        stopAllStreamAndLogout();
                         break;
 
                     case TelephonyManager.CALL_STATE_OFFHOOK:
@@ -787,7 +764,7 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
         AlertDialog dialog = new AlertDialog.Builder(this).setMessage(getString(R.string.do_you_really_want_to_leave_the_chat_room)).setTitle(getString(R.string.hint)).setPositiveButton(getString(R.string.Yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                stopAllStream();
+                stopAllStreamAndLogout();
                 dialog.dismiss();
                 finish();
             }
@@ -804,7 +781,7 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
     /**
      * 退出.
      */
-    protected void stopAllStream() {
+    protected void stopAllStreamAndLogout() {
 
         for (int i = 0, size = mListViewLive.size(); i < size; i++) {
             switch (mListViewLive.get(i).getStreamOrdinal()) {
@@ -871,5 +848,26 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
     public void showSubMsg(String msg){
         mTvSubMsg.setText(msg);
     }
+
+    @Override
+    protected void onDestroy() {
+        // 注销屏幕监听
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+            displayManager.unregisterDisplayListener(mDisplayListener);
+            mDisplayListener = null;
+        }
+
+        // 注销电话监听
+        TelephonyManager tm = (TelephonyManager) getSystemService(Service.TELEPHONY_SERVICE);
+        tm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        mPhoneStateListener = null;
+
+        // 清空回调, 避免内存泄漏
+        mZegoAVKit.setZegoLiveCallback(null);
+
+        super.onDestroy();
+    }
+
 
 }

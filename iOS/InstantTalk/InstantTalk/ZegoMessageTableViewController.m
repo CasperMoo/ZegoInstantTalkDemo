@@ -83,6 +83,11 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (IBAction)onContactUs:(id)sender
+{
+    [[ZegoDataCenter sharedInstance] contactUs];
+}
+
 - (void)onMessageUpdate:(NSNotification *)notification
 {
     [self.tableView reloadData];
@@ -125,7 +130,7 @@
     {
         NSArray *filterArray = [message.memberList filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"userID != %@", [ZegoSettings sharedInstance].userID]];
         cell.nickNameLabel.text = [[ZegoSettings sharedInstance] getMessageTitle:filterArray];
-        cell.avatarView.image = [[ZegoSettings sharedInstance] getMemberAvatar:filterArray width:CGRectGetWidth(cell.nickNameLabel.frame)];
+        cell.avatarView.image = [[ZegoSettings sharedInstance] getMemberAvatar:filterArray width:CGRectGetWidth(cell.avatarView.frame)];
     }
     
     ZegoMessageDetail *messageDetail = [message.messageHistory lastObject];

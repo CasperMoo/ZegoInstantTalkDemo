@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.zego.instanttalk.R;
 import com.zego.instanttalk.adapter.LogListAdapter;
-import com.zego.instanttalk.base.AbsBaseActivity;
+import com.zego.instanttalk.ui.base.AbsBaseActivity;
 import com.zego.instanttalk.utils.PreferenceUtil;
 
 import java.util.LinkedList;
