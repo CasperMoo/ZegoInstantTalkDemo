@@ -22,6 +22,7 @@ NSString *kZegoDemoPublishingStreamID   = @"streamID";   ///< 当前直播流 ID
 NSString *kZegoDemoPublishingLiveID     = @"liveID";        ///< 当前直播频道 ID
 
 
+
 @implementation ZegoSettings
 {
     NSString *_userID;
@@ -93,6 +94,7 @@ NSString *kZegoDemoPublishingLiveID     = @"liveID";        ///< 当前直播频
         [ud setObject:_userID forKey:kZegoDemoUserIDKey];
     }
 }
+
 
 - (void)cleanLocalUser
 {

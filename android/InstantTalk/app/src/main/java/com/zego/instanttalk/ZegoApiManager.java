@@ -3,7 +3,6 @@ package com.zego.instanttalk;
 
 import android.content.Context;
 
-import com.zego.instanttalk.advanced.VideoCaptureFactoryDemo;
 import com.zego.zegoavkit2.ZegoAVKit;
 import com.zego.zegoavkit2.ZegoAvConfig;
 
@@ -42,13 +41,6 @@ public class ZegoApiManager {
 
         // type=2 用于视频聊天
         mZegoAVKit.setBusinessType(2);
-
-        boolean bUseVideoCapture = false;
-        if (bUseVideoCapture) {
-            // 外部采集
-            VideoCaptureFactoryDemo factoryDemo = new VideoCaptureFactoryDemo();
-            mZegoAVKit.setVideoCaptureFactory(factoryDemo);
-        }
 
         // 即构分配的key与id
         byte[] signKey = {
