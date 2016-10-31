@@ -195,6 +195,10 @@ public class TextMessagePresenter {
         }
     }
 
+    public OnUpdateMsgListListener getOnUpdateMsgListListener() {
+        return mOnUpdateMsgListListener;
+    }
+
     public List<BizUser> getSessionMemberList(String session) {
         List<BizUser> sessionMemberList = null;
 
@@ -252,6 +256,7 @@ public class TextMessagePresenter {
                 @Override
                 public void run() {
                     mOnUpdateSessionInfoListener.onUpdateSessionInfo(mListSessionInfo, mUnreadMessageTotalCount);
+                    mOnUpdateSessionInfoListener.onNotifyMsgComing(fromUser.userName);
                 }
             });
         }

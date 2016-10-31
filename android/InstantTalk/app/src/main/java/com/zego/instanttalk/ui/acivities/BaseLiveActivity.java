@@ -524,6 +524,11 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
             }
 
             @Override
+            public void onMixStreamConfigUpdate(int i, String s, HashMap<String, Object> hashMap) {
+
+            }
+
+            @Override
             public void onPlaySucc(String streamID, String liveChannel) {
                 mRlytControlHeader.bringToFront();
 
@@ -570,14 +575,15 @@ public abstract class BaseLiveActivity extends AbsShowActivity {
             public void onCaptureVideoSize(int width, int height) {
             }
 
+
             @Override
-            public void onPlayQualityUpdate(String streamID, int quality) {
+            public void onPlayQualityUpdate(String streamID, int quality, double videoFPS, double videoBitrate) {
                 setLiveQuality(streamID, quality);
 
             }
 
             @Override
-            public void onPublishQulityUpdate(String streamID, int quality) {
+            public void onPublishQulityUpdate(String streamID, int quality, double videoFPS, double videoBitrate) {
                 setLiveQuality(streamID, quality);
             }
 

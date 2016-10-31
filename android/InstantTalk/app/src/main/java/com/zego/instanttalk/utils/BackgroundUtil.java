@@ -12,7 +12,13 @@ import android.text.TextUtils;
 
 public class BackgroundUtil {
 
-    public static boolean getRunningTask(Context context, String packageName) {
+    public static boolean getRunningTask(Context context) {
+
+        if(context == null){
+            return false;
+        }
+
+        String packageName = context.getPackageName();
 
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ComponentName cn = am.getRunningTasks(1).get(0).topActivity;

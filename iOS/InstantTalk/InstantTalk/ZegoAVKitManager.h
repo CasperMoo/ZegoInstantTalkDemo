@@ -11,8 +11,9 @@
 extern "C"{
 #endif
     
-#include <ZegoAVKit2/ZegoLiveApi.h>
-    
+#import <ZegoAVKit2/ZegoLiveApi.h>
+#import <ZegoAVKit2/ZegoLiveApi-advanced.h>
+#import <ZegoAVKit2/ZegoLiveApi-deprecated.h>
     
     ZegoLiveApi * getZegoAV_ShareInstance();
     void releaseZegoAV_ShareInstance();

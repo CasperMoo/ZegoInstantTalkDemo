@@ -62,6 +62,9 @@
     <!--video chat-->
     <string name="hint">Hint</string>
     <string name="someone_is_requesting_to_chat_with_you"><xliff:g id="value">%1$s</xliff:g>&#160;is requesting to chat with you, allow?"</string>
+    <string name="notification">Notification</string>
+    <string name="someone_requested_to_chat_with_you"><xliff:g id="value">%1$s</xliff:g>&#160;requested_to_chat_with_you!"</string>
+    <string name="someone_sent_you_a_text_message"><xliff:g id="value">%1$s</xliff:g>&#160;sent_you_a_text_message!</string>
     <string name="Allow">Allow</string>
     <string name="Deny">Deny</string>
     <string name="do_you_really_want_to_leave_the_chat_room">Do you really want to leave the chat room?</string>

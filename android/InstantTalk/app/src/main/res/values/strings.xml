@@ -61,6 +61,9 @@
     <!--video chat-->
     <string name="hint">提示</string>
     <string name="someone_is_requesting_to_chat_with_you"><xliff:g id="value">%1$s</xliff:g>&#160;正在请求与你视频聊天, 是否同意?"</string>
+    <string name="notification">通知</string>
+    <string name="someone_requested_to_chat_with_you"><xliff:g id="value">%1$s</xliff:g>&#160;请求与你视频聊天!"</string>
+    <string name="someone_sent_you_a_text_message"><xliff:g id="value">%1$s</xliff:g>&#160;给你发了一条文字消息!</string>
     <string name="Allow">同意</string>
     <string name="Deny">拒绝</string>
     <string name="do_you_really_want_to_leave_the_chat_room">确定要离开聊天室吗?</string>

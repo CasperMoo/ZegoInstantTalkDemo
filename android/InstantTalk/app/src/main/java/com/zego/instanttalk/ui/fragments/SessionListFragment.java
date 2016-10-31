@@ -1,5 +1,9 @@
 package com.zego.instanttalk.ui.fragments;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,6 +18,7 @@ import com.zego.instanttalk.entities.SessionInfo;
 import com.zego.instanttalk.interfaces.OnUpdateSessionInfoListener;
 import com.zego.instanttalk.presenters.TextMessagePresenter;
 import com.zego.instanttalk.ui.acivities.TextChatActivity;
+import com.zego.instanttalk.utils.BackgroundUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -100,6 +105,21 @@ public class SessionListFragment extends AbsBaseFragment {
                     TextMessagePresenter.getInstance().readAllMessage();
                 } else {
                     ((MainActivity) mParentActivity).getNavigationBar().showUnreadMessageCount(unreadMsgTotalCount);
+                }
+            }
+
+            @Override
+            public void onNotifyMsgComing(String fromUserName) {
+                if(!BackgroundUtil.getRunningTask(mParentActivity) && TextMessagePresenter.getInstance().getOnUpdateMsgListListener() == null){
+
+                    NotificationManager notificationManager = (NotificationManager) mParentActivity.getSystemService(mParentActivity.NOTIFICATION_SERVICE);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(mParentActivity);
+                    builder.setContentTitle(getString(R.string.notification)).setContentText(getString(R.string.someone_sent_you_a_text_message, fromUserName)).setSmallIcon(R.mipmap.ic_launcher).setAutoCancel(true);
+
+                    builder.setContentIntent(PendingIntent.getActivity(mParentActivity, 0, new Intent(mParentActivity, MainActivity.class), 0));
+
+                    notificationManager.notify(102, builder.build());
                 }
             }
         }, mHandler);

@@ -1,9 +1,12 @@
 package com.zego.instanttalk.ui.acivities;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +18,14 @@ import android.widget.Toast;
 import com.zego.biz.BizUser;
 import com.zego.instanttalk.R;
 import com.zego.instanttalk.adapter.NewChatAdapter;
-import com.zego.instanttalk.ui.base.AbsBaseActivity;
 import com.zego.instanttalk.constants.IntentExtra;
 import com.zego.instanttalk.entities.ChatMsg;
 import com.zego.instanttalk.interfaces.OnPublicRoomListener;
 import com.zego.instanttalk.interfaces.OnUpdateMsgListListener;
 import com.zego.instanttalk.presenters.BizLivePresenter;
 import com.zego.instanttalk.presenters.TextMessagePresenter;
+import com.zego.instanttalk.ui.base.AbsBaseActivity;
+import com.zego.instanttalk.utils.BackgroundUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +108,18 @@ public class TextChatActivity extends AbsBaseActivity {
 
             @Override
             public void onShowRequestMsg(final List<BizUser> listToUser, final String magic, final long roomKey, String fromUserName) {
+
+                if(!BackgroundUtil.getRunningTask(TextChatActivity.this)){
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(TextChatActivity.this);
+                    builder.setContentTitle(getString(R.string.notification)).setContentText(getString(R.string.someone_requested_to_chat_with_you, fromUserName)).setSmallIcon(R.mipmap.ic_launcher).setAutoCancel(true);
+
+                    builder.setContentIntent(PendingIntent.getActivity(TextChatActivity.this, 0, new Intent(TextChatActivity.this, TextChatActivity.class), 0));
+
+                    notificationManager.notify(102, builder.build());
+                }
+
                 mDialogHandleRequestPublish = new AlertDialog.Builder(TextChatActivity.this).setTitle(getString(R.string.hint)).
                         setMessage(getString(R.string.someone_is_requesting_to_chat_with_you, fromUserName)).setPositiveButton(getString(R.string.Allow),
                         new DialogInterface.OnClickListener() {

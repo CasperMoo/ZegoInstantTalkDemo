@@ -1,9 +1,13 @@
 package com.zego.instanttalk;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +31,7 @@ import com.zego.instanttalk.ui.fragments.SessionListFragment;
 import com.zego.instanttalk.ui.fragments.SettingFragment;
 import com.zego.instanttalk.ui.fragments.UserListFragment;
 import com.zego.instanttalk.ui.widgets.NavigationBar;
+import com.zego.instanttalk.utils.BackgroundUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,6 +162,17 @@ public class MainActivity extends AbsBaseActivity implements NavigationBar.Navig
 
             @Override
             public void onShowRequestMsg(final List<BizUser> listToUser, final String magic, final long roomKey, String fromUserName) {
+
+                if(!BackgroundUtil.getRunningTask(MainActivity.this)){
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
+                    builder.setContentTitle(getString(R.string.notification)).setContentText(getString(R.string.someone_requested_to_chat_with_you, fromUserName)).setSmallIcon(R.mipmap.ic_launcher).setAutoCancel(true);
+
+                    builder.setContentIntent(PendingIntent.getActivity(MainActivity.this, 0, new Intent(MainActivity.this, MainActivity.class), 0));
+
+                    notificationManager.notify(102, builder.build());
+                }
                 mDialogHandleRequestPublish = new AlertDialog.Builder(MainActivity.this).setTitle(getString(R.string.hint)).
                         setMessage(getString(R.string.someone_is_requesting_to_chat_with_you, fromUserName)).setPositiveButton(getString(R.string.Allow),
                         new DialogInterface.OnClickListener() {

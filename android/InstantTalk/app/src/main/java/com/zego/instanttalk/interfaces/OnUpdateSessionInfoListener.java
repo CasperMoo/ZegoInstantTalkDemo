@@ -11,4 +11,5 @@ import java.util.LinkedList;
 
 public interface OnUpdateSessionInfoListener {
     void onUpdateSessionInfo(LinkedList<SessionInfo> listSessionInfo, int unreadMsgTotalCount);
+    void onNotifyMsgComing(String fromUserName);
 }

@@ -30,7 +30,7 @@
             android:layout_marginLeft="@dimen/dimen_10"
             android:layout_toRightOf="@id/iv_avatar"
             android:ellipsize="end"
-            android:maxEms="10"
+            android:maxEms="8"
             android:maxLines="1"
             android:textColor="@color/text_black"
             android:textSize="@dimen/text_size_5"

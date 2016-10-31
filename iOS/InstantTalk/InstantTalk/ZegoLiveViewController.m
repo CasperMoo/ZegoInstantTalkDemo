@@ -22,7 +22,7 @@
     
     self.useFrontCamera = YES;
     self.enableTorch = NO;
-    self.beautifyFeature = ZEGO_BEAUTIFY_NONE;
+    self.beautifyFeature = ZEGO_BEAUTIFY_POLISH | ZEGO_BEAUTIFY_WHITEN;
     self.filter = ZEGO_FILTER_NONE;
     
     self.enableMicrophone = YES;

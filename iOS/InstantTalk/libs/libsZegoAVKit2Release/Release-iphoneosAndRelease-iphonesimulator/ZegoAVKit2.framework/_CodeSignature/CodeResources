@@ -6,15 +6,23 @@
 	<dict>
 		<key>Headers/ZegoAVConfig.h</key>
 		<data>
-		6XkJvBwIok41gspHCRsB38nsNdM=
+		ShD43YrXtV7UFZKCIjR7NU197iI=
 		</data>
 		<key>Headers/ZegoAVDefines.h</key>
 		<data>
-		Qx/1J+IQxF6U08e7PC1MHdvj9EQ=
+		Z3ZuYLohKN0ghJ7G3L74gYlnInA=
+		</data>
+		<key>Headers/ZegoLiveApi-advanced.h</key>
+		<data>
+		xSe16kF77yybhz3dXLRl7w5I8M4=
+		</data>
+		<key>Headers/ZegoLiveApi-deprecated.h</key>
+		<data>
+		JH8h8kSsmJpZPwgHQh7Pdz5IbwY=
 		</data>
 		<key>Headers/ZegoLiveApi.h</key>
 		<data>
-		VXO3WxFLA9BASksdWCHDTrpIMDQ=
+		KSEktRaklRO5Aij3pecpqCk5+P0=
 		</data>
 		<key>Headers/ZegoUser.h</key>
 		<data>
@@ -22,15 +30,15 @@
 		</data>
 		<key>Headers/ZegoVideoCapture.h</key>
 		<data>
-		9Jx4owAKHSavFtH5e1uXO33N9jg=
+		Ysp5SBh9ntRfcwiC0ds6SYU1Y7s=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		8KODeLyrxira67Ik5G53Ee3HI3w=
+		PTlC2bAvjIdSTeqAkQakXq56/Pc=
 		</data>
 		<key>ZegoAVKit2-Info.plist</key>
 		<data>
-		q9hAzJcZ5PqXsctGuSnqgviLD04=
+		BH4zsNcodE1FJ2RHxNy0B3HbSBU=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -39,33 +47,55 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			6XkJvBwIok41gspHCRsB38nsNdM=
+			ShD43YrXtV7UFZKCIjR7NU197iI=
 			</data>
 			<key>hash2</key>
 			<data>
-			tVj3DtjYcn70Rteoxk6jnVBNnS7snk9IZZPJ4bkG30g=
+			2X/fTlWM8BLNgk5J+Sx/JZgPEZawXOgaGxF25hLawwc=
 			</data>
 		</dict>
 		<key>Headers/ZegoAVDefines.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			Qx/1J+IQxF6U08e7PC1MHdvj9EQ=
+			Z3ZuYLohKN0ghJ7G3L74gYlnInA=
 			</data>
 			<key>hash2</key>
 			<data>
-			I7M1cHk6coxitmPQYUXn9ITlx/P8fJU1o3nkduQa6yM=
+			aXtAnvjPjtnnx41FWCBPqAX2Vx0nafah3//qHFyl+ls=
+			</data>
+		</dict>
+		<key>Headers/ZegoLiveApi-advanced.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			xSe16kF77yybhz3dXLRl7w5I8M4=
+			</data>
+			<key>hash2</key>
+			<data>
+			TqH6I33nD59KCUbifraxHixy3R3Zi3ZJg6QW2uOBbKk=
+			</data>
+		</dict>
+		<key>Headers/ZegoLiveApi-deprecated.h</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			JH8h8kSsmJpZPwgHQh7Pdz5IbwY=
+			</data>
+			<key>hash2</key>
+			<data>
+			IYjBMiLUcyQoPILte11mWtS3dXaOGzDKhsBNSAx9ams=
 			</data>
 		</dict>
 		<key>Headers/ZegoLiveApi.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			VXO3WxFLA9BASksdWCHDTrpIMDQ=
+			KSEktRaklRO5Aij3pecpqCk5+P0=
 			</data>
 			<key>hash2</key>
 			<data>
-			4uGAZjFm8NDdw7RxbPdOKkSs5XIyPZKvGsdYoRf6o30=
+			Ukma6fc9Lwy5I3roh3S6+j0s8ciuVVH//xTGcNHDdA8=
 			</data>
 		</dict>
 		<key>Headers/ZegoUser.h</key>
@@ -83,22 +113,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9Jx4owAKHSavFtH5e1uXO33N9jg=
+			Ysp5SBh9ntRfcwiC0ds6SYU1Y7s=
 			</data>
 			<key>hash2</key>
 			<data>
-			RqXa6xYSPRM3M7BrRv4NvjHHKLYrLflyHuL+1qzKgaY=
+			r2Milw9u+eRbP36pR4cQVg1VJpdOx0BwLU0Luu1mc0g=
 			</data>
 		</dict>
 		<key>ZegoAVKit2-Info.plist</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			q9hAzJcZ5PqXsctGuSnqgviLD04=
+			BH4zsNcodE1FJ2RHxNy0B3HbSBU=
 			</data>
 			<key>hash2</key>
 			<data>
-			JEz0XplVdtbgicdHsGNvpcPW/5IzSKzZrMy7+VfH5hU=
+			U6L/aBMd4/W379A+oT/qp+f2C/w9AX8g89L/PgYVH1I=
 			</data>
 		</dict>
 	</dict>
@@ -119,6 +149,11 @@
 			<true/>
 			<key>weight</key>
 			<real>1100</real>
+		</dict>
+		<key>^Base\.lproj/</key>
+		<dict>
+			<key>weight</key>
+			<real>1010</real>
 		</dict>
 		<key>^version.plist$</key>
 		<true/>
@@ -164,6 +199,11 @@
 			<true/>
 			<key>weight</key>
 			<real>1100</real>
+		</dict>
+		<key>^Base\.lproj/</key>
+		<dict>
+			<key>weight</key>
+			<real>1010</real>
 		</dict>
 		<key>^Info\.plist$</key>
 		<dict>
