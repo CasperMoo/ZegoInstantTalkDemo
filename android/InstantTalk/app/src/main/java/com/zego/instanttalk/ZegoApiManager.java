@@ -16,6 +16,8 @@ public class ZegoApiManager {
 
     private ZegoAVKit mZegoAVKit = null;
 
+    private ZegoAvConfig mZegoAvConfig = null;
+
     private ZegoApiManager() {
         mZegoAVKit = new ZegoAVKit();
     }
@@ -55,7 +57,8 @@ public class ZegoApiManager {
         mZegoAVKit.init(appID, signKey, context);
 
         // 初始化设置级别为"High"
-        mZegoAVKit.setAVConfig(new ZegoAvConfig(ZegoAvConfig.Level.High));
+        mZegoAvConfig = new ZegoAvConfig(ZegoAvConfig.Level.High);
+        mZegoAVKit.setAVConfig(mZegoAvConfig);
     }
 
 
@@ -73,6 +76,7 @@ public class ZegoApiManager {
     }
 
     public void setZegoConfig(ZegoAvConfig config) {
+        mZegoAvConfig = config;
         mZegoAVKit.setAVConfig(config);
     }
 }
