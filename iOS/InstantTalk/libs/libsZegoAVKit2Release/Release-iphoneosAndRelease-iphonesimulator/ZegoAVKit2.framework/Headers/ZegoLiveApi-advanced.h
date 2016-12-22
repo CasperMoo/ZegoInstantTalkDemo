@@ -2,7 +2,6 @@
 //  ZegoLiveApi-advanced.h
 //  zegoavkit
 //
-//  Created by Randy Qiu on 16/9/7.
 //  Copyright © 2016年 Zego. All rights reserved.
 //
 
@@ -10,6 +9,12 @@
 #define ZegoLiveApi_advanced_h
 
 #import "ZegoLiveApi.h"
+#import "ZegoAVDefines.h"
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
+#import <AppKit/AppKit.h>
+#endif
 
 @protocol ZegoLiveApiRenderDelegate <NSObject>
 
@@ -45,6 +50,13 @@ typedef enum : NSUInteger {
 @protocol ZegoLiveEventDelegate <NSObject>
 
 - (void)zego_onLiveEvent:(ZegoLiveEvent)event info:(NSDictionary<NSString*, NSString*>*)info;
+
+@end
+
+
+@protocol ZegoDeviceEventDelegate <NSObject>
+
+- (void)zego_onDevice:(NSString *)deviceName error:(int)errorCode;
 
 @end
 
@@ -90,15 +102,12 @@ typedef enum : NSUInteger {
 /// \return true 成功，false 失败
 - (bool)setRemoteViewRotation:(CAPTURE_ROTATE)rotate viewIndex:(RemoteViewIndex)index;
 
-/// \brief 设置预览渲染朝向
-/// \param rotate 逆时针旋转角度
+#if TARGET_OS_IPHONE
+/// \brief 设置App的朝向，确定进行横竖屏采集
+/// \param orientation app orientation
 /// \return true 成功，false 失败
-- (bool)setLocalViewRotation:(CAPTURE_ROTATE)rotate;
-
-/// \brief 设置采集时摄像头方向,在startPublish前设置有效，startPublish后调用则返回false
-/// \param rotate 顺时针方向
-/// \return true:调用成功；false:调用失败
-- (bool)setCaptureRotation:(CAPTURE_ROTATE)rotate;
+- (bool)setAppOrientation:(UIInterfaceOrientation)orientation;
+#endif
 
 /// \brief 开启采集监听
 /// \param bEnable true打开，false关闭
@@ -145,6 +154,25 @@ typedef enum : NSUInteger {
 /// \param factor 取值范围[0,1]， 参数越大亮度越暗
 - (bool)setWhitenFactor:(float)factor;
 
+/// \brief 设置锐化参数
+/// \param factor 取值范围[0,2]，参数边缘越明显
+- (bool)setSharpenFactor:(float)factor;
+
+/// \brief 是否启用前摄像头预览镜像
+/// \param enable true 启用，false 不启用
+/// \return true 成功，否则失败
+- (bool)enablePreviewMirror:(bool)enable;
+
+/// \brief 是否启用摄像头采集结果镜像
+/// \param enable true 启用，false 不启用
+/// \return true 成功，否则失败
+- (bool)enableCaptureMirror:(bool)enable;
+
+/// \brief 是否开启码率控制（在带宽不足的情况下码率自动适应当前带宽)
+/// \param enable true 启用，false 不启用
+/// \return true 成功，否则失败
+- (bool)enableRateControl:(bool)enable;
+
 /// \brief 混音输入播放静音开关
 /// \param bMute true: aux 输入播放静音；false: 不静音
 - (bool)muteAux:(bool)bMute;
@@ -168,6 +196,29 @@ typedef enum : NSUInteger {
 /// \brief 直播事件通知回调
 /// \param liveEventDelegate 直播事件通知回调协议
 - (void)setLiveEventDelegate:(id<ZegoLiveEventDelegate>)liveEventDelegate;
+
+/// \brief 音视频设备错误通知回调
+/// \param deviceEventDelegate 直播事件通知回调协议
+- (void)setDeviceEventDelegate:(id<ZegoDeviceEventDelegate>)deviceEventDelegate;
+
+/// \brief 获取当前采集的音量
+/// \return 当前采集音量大小
+- (float)getCaptureSoundLevel;
+
+/// \brief 获取当前播放视频的音量
+/// \param[in] channelIndex 播放通道
+/// \return channelIndex对应视频的音量
+- (float)getRemoteSoundLevel:(int)channelIndex;
+
+/// \brief 设置编码器码率控制策略
+/// \param strategy 策略配置，参考 ZegoAPIVideoEncoderRateControlStrategy
+/// \param encoderCRF 当策略为恒定质量（ZEGOAPI_RC_VBR/ZEGOAPI_RC_CRF）有效，取值范围 [0~51]，越小质量越好，建议取值范围 [18, 28]
++ (void)setVideoEncoderRateControlStrategy:(int)strategy encoderCRF:(int)crf;
+
+/// \brief 设置拉流质量监控周期
+/// \param timeInMS 时间周期，单位为毫秒，取值范围：(500, 60000)
+/// \return true 设置成功，否则失败
++ (void)setPlayQualityMoniterCycle:(unsigned int)timeInMS;
 
 @end
 

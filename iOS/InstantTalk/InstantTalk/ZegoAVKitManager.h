@@ -23,6 +23,9 @@ extern "C"{
     BOOL isUseingTestEnv();
     uint32 ZegoGetAppID();
     
+    void setUseAlphaEnv(BOOL alphaEnv);
+    BOOL isUsingAlphaEnv();
+    
     void ZegoRequireHardwareAccelerated(bool hardwareAccelerated);
     BOOL ZegoIsRequireHardwareAccelerated();
     

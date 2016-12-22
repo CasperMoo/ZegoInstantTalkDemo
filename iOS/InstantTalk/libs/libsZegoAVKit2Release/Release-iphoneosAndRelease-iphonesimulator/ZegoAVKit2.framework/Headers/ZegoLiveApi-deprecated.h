@@ -2,7 +2,6 @@
 //  ZegoLiveApi-deprecated.h
 //  zegoavkit
 //
-//  Created by Randy Qiu on 16/9/7.
 //  Copyright © 2016年 Zego. All rights reserved.
 //
 
@@ -17,8 +16,19 @@
 /// \brief 设置手机姿势
 /// \param rotate 逆时针旋转角度
 /// \return true:调用成功；false:调用失败
-/// \note 已废弃，请使用 setRemoteViewRotation、setLocalViewRotattion 和 setCaptureRotation
+/// \note 已废弃，请使用 setRemoteViewRotation、setLocalViewRotattion
 - (bool)setDisplayRotation:(CAPTURE_ROTATE)rotate;
+
+/// \brief 设置采集时摄像头方向,在startPublish前设置有效，startPublish后调用则返回false
+/// \param rotate 方向
+/// \return true:调用成功；false:调用失败
+- (bool)setCaptureRotation:(CAPTURE_ROTATE)rotate;
+
+/// \brief 设置预览渲染朝向
+/// \param rotate 旋转角度
+/// \return true 成功，false 失败
+/// \note 使用setAppOrientation 替代
+- (bool)setLocalViewRotation:(CAPTURE_ROTATE)rotate;
 
 /// \brief 获取 SDK 版本1
 /// \note 已废弃，请使用 +version
@@ -27,6 +37,21 @@
 /// \brief 获取 SDK 版本2
 /// \note 已废弃，请使用 +version2
 - (NSString *)version2;
+
+/// \brief 开关硬件编码
+/// \param bRequire 开关
+/// \note 已废弃，请使用 +requireHardwareEncoder
+- (bool)requireHardwareEncoder:(bool)bRequire;
+
+/// \brief 开关硬件解码
+/// \param bRequire 开关
+/// \note 已废弃，请使用 +requireHardwareDecoder
+- (bool)requireHardwareDecoder:(bool)bRequire;
+
+/// \brief 开关硬件编解码
+/// \param bRequire 开关
+/// \note 请用 requireHardwareEncoder/requireHardwareDecoder
+- (bool)requireHardwareAccelerated:(bool)bRequire;
 
 @end
 

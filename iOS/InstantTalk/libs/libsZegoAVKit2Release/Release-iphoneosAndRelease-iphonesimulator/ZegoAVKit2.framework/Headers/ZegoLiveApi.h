@@ -217,9 +217,11 @@
 /// \return 0表示成功，非0 分别用一位来表示对应的值设置失败，可以与上SetConfigReturnType的各个值来获取设置失败的原因
 - (int)setAVConfig:(ZegoAVConfig*)config;
 
+#if TARGET_OS_IPHONE
 /// \brief 设置手机姿势，用于校正主播输出视频朝向
 /// \param orientation 手机姿势
-- (int)setAppOrientation:(UIInterfaceOrientation)orientation;
+- (bool)setAppOrientation:(UIInterfaceOrientation)orientation;
+#endif
 
 /// \brief 设置是否使用前置摄像头
 /// \param bFront 使用前置摄像头
@@ -259,10 +261,15 @@
 /// \note 通过回调 onTakeLocalViewSnapshot: 返回结果
 - (bool)takeLocalViewSnapshot;
 
-/// \brief 开关硬件编解码
+/// \brief 开关硬件编码
 /// \param bRequire 开关
 /// \note ！！！打开硬编硬解开关需后台可控，避免碰到版本升级或者硬件升级时出现硬编硬解失败的问题
-- (bool)requireHardwareAccelerated:(bool)bRequire;
++ (bool)requireHardwareEncoder:(bool)bRequire;
+
+/// \brief 开关硬件解码
+/// \param bRequire 开关
+/// \note ！！！打开硬编硬解开关需后台可控，避免碰到版本升级或者硬件升级时出现硬编硬解失败的问题
++ (bool)requireHardwareDecoder:(bool)bRequire;
 
 /// \brief 主动出发日志上报
 - (void)uploadLog;

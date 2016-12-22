@@ -21,6 +21,10 @@ ZEGO_EXTERN NSString *const kZegoRtmpUrlListKey;        ///< rtmp 播放 url 列
 ZEGO_EXTERN NSString *const kZegoHlsUrlListKey;         ///< hls 播放 url 列表，值为 NSArray<NSString *>
 ZEGO_EXTERN NSString *const kZegoFlvUrlListKey;         ///< flv 播放 url 列表，值为 NSArray<NSString *>
 
+ZEGO_EXTERN NSString *const kZegoDeviceCameraName;      ///< 摄像头设备
+ZEGO_EXTERN NSString *const kZegoDeviceMicrophoneName;  ///< 麦克风设备
+
+
 typedef unsigned int	uint32;
 
 typedef enum {
@@ -68,14 +72,13 @@ typedef enum : NSUInteger {
     ZEGO_FILTER_DARK        = 13    ///< 夜色
 } ZegoFilter;
 
-
-
 /// \brief 美白特性，
 typedef enum : NSUInteger {
     ZEGO_BEAUTIFY_NONE          = 0,        ///< 无美颜
     ZEGO_BEAUTIFY_POLISH        = 1,        ///< 磨皮
-    ZEGO_BEAUTIFY_WHITEN        = 1 << 1,   ///< 全屏美白
-    ZEGO_BEAUTIFY_SKINWHITEN    = 1 << 2    ///< 皮肤美白，一般与磨皮结合使用 ZEGO_BEAUTIFY_POLISH | ZEGO_BEAUTIFY_SKINWHITEN
+    ZEGO_BEAUTIFY_WHITEN        = 1 << 1,   ///< 全屏美白，一般与磨皮结合使用：ZEGO_BEAUTIFY_POLISH | ZEGO_BEAUTIFY_WHITEN
+    ZEGO_BEAUTIFY_SKINWHITEN    = 1 << 2,   ///< 皮肤美白
+    ZEGO_BEAUTIFY_SHARPEN       = 1 << 3
 } ZegoBeautifyFeature;
 
 
@@ -100,5 +103,20 @@ typedef enum : NSUInteger {
  */
 
 @end
+
+enum ZegoAPIVideoEncoderRateControlStrategy
+{
+    ZEGOAPI_RC_ABR,    ///< 恒定码率
+    ZEGOAPI_RC_CBR,    ///< 恒定码率
+    ZEGOAPI_RC_VBR,    ///< 恒定质量
+    ZEGOAPI_RC_CRF,    ///< 恒定质量
+};
+
+enum ZegoAPIPublishFlag
+{
+    ZEGOAPI_JOIN_PUBLISH   = 1 << 0,
+    ZEGOAPI_MIX_STREAM     = 1 << 1,
+    ZEGOAPI_SINGLE_ANCHOR  = 1 << 2,
+};
 
 #endif /* ZegoAVApiDefines_h */

@@ -12,6 +12,7 @@ NSData *g_signKey = nil;
 uint32 g_appID = 0;
 
 BOOL g_useTestEnv = NO;
+BOOL g_useAlphaEnv = NO;
 
 #if TARGET_OS_SIMULATOR
 BOOL g_requireHardwareAccelerated = NO;
@@ -203,4 +204,27 @@ BOOL ZegoIsRequireHardwareAccelerated()
 NSString *ZegoGetSDKVersion()
 {
     return [getZegoAV_ShareInstance() version];
+}
+
+@interface NSObject()
+// * suppress warning
++ (void)setUseAlphaEnv:(id)useAlphaEnv;
+@end
+
+void setUseAlphaEnv(BOOL alphaEnv)
+{
+    if ([ZegoLiveApi respondsToSelector:@selector(setUseAlphaEnv:)])
+    {
+        if (g_useAlphaEnv != alphaEnv)
+            releaseZegoAV_ShareInstance();
+        
+        g_useAlphaEnv = alphaEnv;
+        
+        [ZegoLiveApi performSelector:@selector(setUseAlphaEnv:) withObject:@(alphaEnv)];
+    }
+}
+
+BOOL isUsingAlphaEnv()
+{
+    return g_useAlphaEnv;
 }

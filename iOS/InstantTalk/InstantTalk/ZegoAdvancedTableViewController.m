@@ -37,6 +37,19 @@
     if (ZegoGetAppID() != 0) {
         [self.appID setText:[NSString stringWithFormat:@"%u", ZegoGetAppID()]];
     }
+    
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onAlphaEnv:)];
+    gesture.numberOfTapsRequired = 5;
+    [self.tableView addGestureRecognizer:gesture];
+}
+
+- (void)onAlphaEnv:(UIGestureRecognizer *)gesture
+{
+    BOOL alpha = isUsingAlphaEnv();
+    setUseAlphaEnv(!alpha);
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"测试环境" message:alpha ? @"关闭Alpha环境" : @"打开Alpha环境" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 - (void)didReceiveMemoryWarning {
